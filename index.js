@@ -31,6 +31,7 @@ let dealer = {
 let player = {
     name: 'Whale',
     bankroll: 0,
+    bet: 0,
     score: 0,
     hand: [],
     blackjack: false,
@@ -74,6 +75,7 @@ let player5 = {
 let playersWatching = [player5, player4, player3, player2, player1]
 let playersPlaying = [dealer, player]
 
+//add functionality for multiple players
 function addPlayer(){
     playersPlaying.push(playersWatching.pop());
 }
@@ -84,42 +86,47 @@ function loadBankroll(playerName, reloadAmount) {
     playerName.bankroll += reloadAmount
 }
 
-function shuffleUp(numDecks=1) {
+function shuffleUpAndDeal(numDecks=1) {
     createNewShoe(numDecks);
     shuffle();
-    loadBankroll(dealer, 1000)
-}
-function checkBlackjack(playerID){
-    if (playerID.score === 21){
-        playerID.blackjack = true;
-    }
-}
-function dealHand() {
+    loadBankroll(dealer, 1000);
     dealer.bust = false;
     player.bust = false;
+//    player.bet = prompt('Place your bets')
+    player.bet = 25;
     for (let i = 0; i < 2; i++) {
         for (let j = playersPlaying.length - 1; j >= 0; j--) {
             playersPlaying[j].hand.push(shoe.pop());
             playersPlaying[j].score += playersPlaying[j].hand[i];
         }
     }
-    checkBlackjack(player)
-    checkBlackjack(dealer)
+    checkBlackjack();
+}
+
+function checkBlackjack(){
+    if (dealer.score === 21) {
+        dealer.blackjack = true;
+    }
+    if (player.score === 21) {
+        player.blackjack = true;
+    }
     if (dealer.blackjack === true && player.blackjack === true) {
         console.log('Push')
-    }
-    else if (dealer.blackjack === true) {
+    } else if (dealer.blackjack === true) {
         console.log('Dealer blackjack')
-    }
-    else if (player.blackjack === true) {
+        player.bankroll -= player.bet;
+        dealer.bankroll += player.bet;
+    } else if (player.blackjack === true) {
         console.log('Player blackjack')
-    }
-    else {
+        player.bankroll += (player.bet * 1.5);
+        dealer.bankroll -= (player.bet * 1.5);
+    } else {
         console.log('Dealer score: ' + dealer.hand[0])
     }
+    return dealer.blackjack === true || player.blackjack === true;
 }
 function hitMe(playerID){
-    let nextCard = shoe.pop
+    let nextCard = shoe.pop;
     playerID.hand.push(nextCard);
     playerID.score += nextCard;
     for (let i = 0; i < playerID.hand.length; i++) {
@@ -131,40 +138,66 @@ function hitMe(playerID){
 function playerMove(playerID){
     console.log('Your score is ' + playerID.score)
     if (playerID.score > 21){
-        playerID.bust = true
+        playerID.bust = true;
+        console.log('Player Bust');
     }
-    else {
+/*    else {
         let answer = prompt('Hit again?(y/n)');
         if (answer.toLowerCase() === 'y') {
-            hitMe(playerID)
-            playerMove(playerID)
+            hitMe(playerID);
+            playerMove(playerID);
         }
-    }
+    }*/
 }
 function dealerMove(){
     while (dealer.score < 17) {
         let nextCard = deck.pop();
+        console.log(nextCard)
         dealer.hand.push(nextCard);
         dealer.score += nextCard;
     }
     if (dealer.score > 21) {
-        dealer.bust = true
+        dealer.bust = true;
+        console.log('Dealer Bust');
+    }
+
+    if (dealer.bust === false) {
+        if (player.bust === true) {
+            player.bankroll -= player.bet;
+            dealer.bankroll += player.bet;
+        }
+        else if (player.score === dealer.score) {
+            console.log('Push');
+        }
+        else if (player.score > dealer.score) {
+            console.log('Player wins')
+            player.bankroll += player.bet;
+            dealer.bankroll -= player.bet;
+        }
+        else if (player.score < dealer.score) {
+            console.log('Dealer wins')
+            player.bankroll -= player.bet;
+            dealer.bankroll += player.bet;
+        }
+    }
+    else {
+        if (player.bust === false) {
+            player.bankroll += player.bet;
+            dealer.bankroll -= player.bet;
+        }
     }
 }
-function squareUp(){
 
+loadBankroll(player, 1000);
+shuffleUpAndDeal(6);
+console.log(playersPlaying)
+if (!checkBlackjack()) {
+    playerMove(player);
+    dealerMove();
 }
-
-
-
-
-//console.log(JSON.stringify(obj))
-shuffleUp()
+console.log(checkBlackjack())
 console.log(playersPlaying)
-loadBankroll(dealer, 1000)
-loadBankroll(player, 500)
-dealHand()
-console.log(playersPlaying)
+
 
 
 
