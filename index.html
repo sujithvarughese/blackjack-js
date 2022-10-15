@@ -6,10 +6,25 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
+    <link rel="stylesheet" href="stylesheet.css">
 
 </head>
 <body>
+    <h1>Blackjack</h1>
+    <h3 id="usr-notify">Press Deal Cards when ready!</h3>
+    <h3 id="usr-notify2"></h3>
+    <button onclick=dealHand()>Deal Cards!</button>
+    <h3 id="player-hand">Players Cards:</h3>
+    <h3 id="player-score">Players Score:</h3>
+    <h3 id="player-bankroll">Players Bankroll:</h3>
+    <h3 id="bet-amt">Bet Amount:</h3>
+    <h3 id="dealer-hand">Dealers Cards:</h3>
+    <h3 id="dealer-score">Dealers Score:</h3>
+    <h3 id="dealer-bankroll">Dealers Bankroll:</h3>
+    <button onclick=hitMe()>Hit Me!</button>
+    <button onclick=dealerMove()>Stay</button>
+    <button onclick=shuffleUp(6)>New Game</button>
     <script src="index.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>
