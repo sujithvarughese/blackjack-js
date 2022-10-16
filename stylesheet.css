@@ -36,6 +36,12 @@ button {
     margin-bottom: 5px;
     border-radius: 2px;
 }
+button:hover {
+    background-color: gold;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
 
 
 #deal-btn-btn {
