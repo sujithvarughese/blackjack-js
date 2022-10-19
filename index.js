@@ -1,12 +1,13 @@
-let playerHand = document.getElementById('player-hand');
 let playerScore = document.getElementById('player-score');
 let dealerScore = document.getElementById('dealer-score');
-let dealerHand = document.getElementById('dealer-hand');
+let playerHand = document.getElementById('player-blackjack-hand')
+let dealerHand = document.getElementById('dealer-blackjack-hand');
 let betAmount = document.getElementById('bet-amt');
 let userNotify = document.getElementById('usr-notify');
 let userNotify2 = document.getElementById('usr-notify2');
 let playerRoll = document.getElementById('player-bankroll');
 let dealerRoll = document.getElementById('dealer-bankroll');
+
 
 let deck = [2,3,4,5,6,7,8,9,10,10,10,10,11,2,3,4,5,6,7,8,9,10,10,10,10,11,2,3,4,5,6,7,8,9,10,10,10,10,11,2,3,4,5,6,7,8,9,10,10,10,10,11];
 let shoe = [];
@@ -28,6 +29,19 @@ function createNewShoe(numDecks=1) {
 function shuffle(numShuffles=10){
     for (let i = 0; i < numShuffles; i++) {
         shoe.sort(() => Math.random() - 0.5);
+    }
+}
+function _shuffle(numShuffles) {
+    let currentIndex = shoe.length;
+    for (let i = 0; i < numShuffles; i++) {
+        while (currentIndex != 0) {
+            let randomIndex = Math.floor(Math.random() * shoe.length);
+            currentIndex -= 1;
+
+            let temp = shoe[currentIndex];
+            shoe[currentIndex] = shoe[randomIndex];
+            shoe[randomIndex] = temp;
+        }
     }
 }
 // dealer and player objects created
@@ -56,6 +70,12 @@ function loadMoney(playerName, loadAmount) {
 }
 function reloadMoney(playerName, reloadAmount) {
     playerName.bankroll += reloadAmount;
+}
+function raiseBet(player){
+    player.bet +=25;
+}
+function lowerBet(player) {
+    player.bet -=25;
 }
 
 // checks table for any blackjacks and updates bankrolls if found.
