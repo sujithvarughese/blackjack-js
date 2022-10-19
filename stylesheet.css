@@ -5,24 +5,23 @@ body {
     color: white;
     text-align: center;
     background-color: green;
+    width: 75%;
+    margin: 0 auto;
 }
 
 h1 {
-    color: yellow;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    padding-bottom: 50px;
+    color: gold;
+
 }
 
 h2 {
     font-size: 50px;
-    margin-top: 0;
-    margin-bottom: 20px;
+    margin-top: 10px;
 }
 
 h3 {
-    margin-top: 20px;
-    margin-bottom: 50px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 button {
@@ -42,12 +41,52 @@ button:hover {
     color: white;
     cursor: pointer;
 }
-
-
 #deal-btn-btn {
     background: darkred;
 }
-
 #clear-btn {
     background: black;
+}
+
+.flex-bj-hands {
+    display: flex;
+    border: 1px solid black;
+    padding: 10px;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.player-hand-div {
+    display: flex;
+    border: 1px solid black;
+    padding: 10px;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.dealer-hand-div {
+    display: flex;
+    border: 1px solid black;
+    padding: 10px;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.flex-bet-div {
+    display: flex;
+    padding: 20px;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+.flex-bankroll-div {
+    display: flex;
+    padding: 20px;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-around;
 }
