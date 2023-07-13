@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useGlobalContext } from "../context/GlobalContext.js";
+import { useGlobalContext } from "../context/GlobalContext.jsx";
 
 //if user doesnt change values, default to initialState
 const initialState = {
@@ -29,8 +29,8 @@ const Menu = () => {
 
 			<form onSubmit={handleSubmit}>
 
-				<label htmlFor="decks">How many decks?</label>
-				<input type="number" name="decks" value={values.numDecks} onChange={handleChange}/>
+				<label htmlFor="numDecks">How many decks?</label>
+				<input type="number" name="numDecks" value={values.numDecks} min="1" max="8" onChange={handleChange}/>
 
 				<label htmlFor="playerBankroll">How much money you wanna lose?</label>
 				<input type="number" name="playerBankroll" value={values.playerBankroll} onChange={handleChange}/>

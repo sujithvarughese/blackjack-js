@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useGlobalContext } from "../context/GlobalContext.js";
+import { useGlobalContext } from "../context/GlobalContext.jsx";
 
 const Welcome = () => {
 

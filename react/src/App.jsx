@@ -1,6 +1,6 @@
 import Game from "./components/Game.jsx";
 import Welcome from "./components/Welcome.jsx";
-import { useGlobalContext } from "./context/GlobalContext.js";
+import { useGlobalContext } from "./context/GlobalContext.jsx";
 
 const App = () => {
 
