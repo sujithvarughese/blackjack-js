@@ -25,6 +25,10 @@ import {
 	PLAYER_DOUBLE,
 	DEALER_BUST,
 	DEALER_HIT,
+	DEALER_STAY,
+	PLAYER_WIN,
+	DEALER_WIN,
+	PUSH,
 	NEW_DEAL
 } from './actions.js'
 
@@ -273,15 +277,20 @@ const GlobalProvider = ({ children }) => {
 		const dealerHand = [...state.dealer.hand]  // temp hands for dealer that we put in state
 		let dealerScore = state.dealer.score
 
-		let nextCard = currentShoe.pop()
-		dealerScore += nextCard.value
+		while (dealerScore <= 16) {
+			let nextCard = currentShoe.pop()
+			dealerScore += nextCard.value
 
-		// if next card is Ace and total hand value is 10 or less, set the Ace to 11
-		if (nextCard.value === 1 && dealerScore <= 10) {
-			nextCard.value = 11
+			// if next card is Ace and total hand value is 10 or less, set the Ace to 11
+			if (nextCard.value === 1 && dealerScore <= 10) {
+				nextCard.value = 11
+			}
+			dealerHand.push(nextCard)
+			dispatch({
+				type: DEALER_HIT,
+				payload: { currentShoe, dealerHand, dealerScore }
+			})
 		}
-		dealerHand.push(nextCard)
-
 		if (dealerScore > 21) {
 			dispatch({
 				type: DEALER_BUST,
@@ -290,9 +299,32 @@ const GlobalProvider = ({ children }) => {
 		}
 		else {
 			dispatch({
-				type: DEALER_HIT,
+				type: DEALER_STAY,
 				payload: { currentShoe, dealerHand, dealerScore }
 			})
+		}
+		setTimeout(() => {
+			determineWinner()
+		}, 1500)
+	}
+
+	const determineWinner = () => {
+		if (state.player.score <= 21 && state.dealer.hand <= 21) {
+			if (state.player.score > state.dealer.score) {
+				dispatch({
+					type: PLAYER_WIN,
+				})
+			}
+			else if (state.player.score > state.dealer.score) {
+				dispatch({
+					type: DEALER_WIN,
+				})
+			}
+			else {
+				dispatch({
+					type: PUSH,
+				})
+			}
 		}
 	}
 

@@ -29,5 +29,10 @@ export const PLAYER_DOUBLE = 'PLAYER_DOUBLE'
 
 export const DEALER_BUST = 'DEALER_BUST'
 export const DEALER_HIT = 'DEALER_HIT'
+export const DEALER_STAY = 'DEALER_STAY'
+
+export const PLAYER_WIN = 'PLAYER_WIN'
+export const DEALER_WIN = 'DEALER_WIN'
+export const PUSH = 'PUSH'
 
 export const NEW_DEAL = 'NEW_DEAL'

@@ -21,7 +21,11 @@ import {
 	PLAYER_STAY,
 	DEALER_BUST,
 	DEALER_HIT,
+	DEALER_STAY,
 	PLAYER_SPLIT,
+	PLAYER_WIN,
+	DEALER_WIN,
+	PUSH,
 	NEW_DEAL,
 
 } from "./actions.js";
@@ -150,6 +154,10 @@ const Reducer = (state, action) => {
 			handInProgress: false,
 			newDealOption: true,
 			playerOptions: true,
+			player: {
+				...state.player,
+				bankroll: state.player.bankroll + state.bet
+			}
 		}
 	}
 
@@ -161,6 +169,10 @@ const Reducer = (state, action) => {
 			handInProgress: false,
 			newDealOption: true,
 			playerOptions: true,
+			player: {
+				...state.player,
+				bankroll: state.player.bankroll + (state.bet * 1.5) + state.bet
+			}
 		}
 	}
 	if (action.type === HANDLE_DEALER_BLACKJACK) {
@@ -264,11 +276,87 @@ const Reducer = (state, action) => {
 	}
 
 	if (action.type === DEALER_BUST) {
+		return {
+			...state,
+			shoe: action.payload.currentShoe,
+			player: {
+				...state.player,
+				bankroll: state.player.bankroll + state.bet + state.bet
+			},
+			dealer: {
+				...state.dealer,
+				hand: action.payload.dealerHand,
+				score: action.payload.dealerScore
+			},
+			alert: 'Dealer bust!',
+			showAlert: true,
+			canPlaceBets: true,
+			playerOptions: true,
+			newDealOption: true
+		}
+	}
 
+	if (action.type === DEALER_STAY) {
+		return {
+			...state,
+			shoe: action.payload.currentShoe,
+			dealer: {
+				...state.dealer,
+				hand: action.payload.dealerHand,
+				score: action.payload.dealerScore
+			},
+		}
 	}
 
 	if (action.type === DEALER_HIT) {
+		return {
+			...state,
+			shoe: action.payload.currentShoe,
+			dealer: {
+				...state.dealer,
+				hand: action.payload.dealerHand,
+				score: action.payload.dealerScore
+			},
+		}
+	}
 
+	if (action.type === PLAYER_WIN) {
+		return {
+			...state,
+			player: {
+				...state.player,
+				bankroll: state.player.bankroll + state.bet + state.bet
+			},
+			alert: 'Player Win!!',
+			showAlert: true,
+			canPlaceBets: true,
+			playerOptions: true,
+			newDealOption: true
+		}
+	}
+	if (action.type === DEALER_WIN) {
+		return {
+			...state,
+			alert: 'Dealer Win :(',
+			showAlert: true,
+			canPlaceBets: true,
+			playerOptions: true,
+			newDealOption: true
+		}
+	}
+	if (action.type === PUSH) {
+		return {
+			...state,
+			player: {
+				...state.player,
+				bankroll: state.player.bankroll + state.bet
+			},
+			alert: 'Push!',
+			showAlert: true,
+			canPlaceBets: true,
+			playerOptions: true,
+			newDealOption: true
+		}
 	}
 
 
