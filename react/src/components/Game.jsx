@@ -1,59 +1,34 @@
 import Menu from "./Menu.jsx";
 import Player from "./Player.jsx";
 import { useGlobalContext } from "../context/GlobalContext.jsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import PlaceBets from "./PlaceBets.jsx";
+import Dealer from "./Dealer.jsx";
+import Alert from "./Alert.jsx";
+import PlayerOptions from "./PlayerOptions.jsx";
+import tableIMG from '../images/table-main.jpeg'
 
 const Game = () => {
 
-	const { showMenu, showDealButton, shoe, canPlaceBets, initialDeal, player, dealer } = useGlobalContext()
-
-	const [bet, setBet] = useState(25)
-
-	const handleSubmit = (e) => {
-		e.preventDefault()
-		initialDeal(bet)
-	}
-
-	console.log(player.hand);
-	console.log(dealer.hand);
-	console.log(shoe);
+	const { alert, showAlert, handInProgress, showMenu, playerOptions, shoe, canPlaceBets, player, dealer } = useGlobalContext()
 
 
 	return (
 		<div>
+			<img src={tableIMG} alt="table"/>
 			{ showMenu && <Menu />}
 
-			{ canPlaceBets &&
-				<form onSubmit={handleSubmit}>
-					<label htmlFor="betAmount">Bet</label>
-					<input type="number" name="bet" min="25" value={bet} onChange={e=>setBet(e.target.value)}/>
-					<button type="submit">Deal!</button>
-				</form>
-			}
+			{ canPlaceBets && <PlaceBets />}
 
-			{
-				player?.hand.map((card, index) => {
-					return (
-						<div key={index}>
-							{card.value}
-							<img src={card.img} alt={card.value}/>
-						</div>
-					)
-				})
-			}
+			{ showAlert && <Alert />}
 
-			{
-				dealer?.hand.map((card, index) => {
-					return (
-						<div key={index}>
-							{card.value}
-							<img src={card.img} alt={card.value}/>
-						</div>
-					)
-				})
-			}
-			<div>We will be right back....</div>
 
+
+			{ handInProgress  && <Player />}
+
+			{ handInProgress && <Dealer />}
+
+			{ playerOptions && <PlayerOptions /> }
 
 		</div>
 	)

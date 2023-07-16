@@ -1,25 +1,20 @@
 import { useGlobalContext } from "../context/GlobalContext.jsx";
 import { useEffect } from "react";
 
-const Player = () => {
+const Dealer = () => {
 
-	const { player } = useGlobalContext()
+	const { dealer } = useGlobalContext()
+	const { hasBlackjack, hand, score } = dealer
 
-	useEffect(()=> {
-
-	},[player])
 
 	return (
 		<div>
-			<div>{player?.score}</div>
-			<div>{player?.bankroll}</div>
-
+			{dealer.score}
 			<div className="flex">
 				{
-					player?.hand.map((card, index) => {
+					dealer?.hand.map((card, index) => {
 						return (
 							<div key={index}>
-
 								<img src={card.img} alt={card.value}/>
 							</div>
 						)
@@ -31,4 +26,4 @@ const Player = () => {
 	);
 };
 
-export default Player;
+export default Dealer;
