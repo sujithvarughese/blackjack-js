@@ -15,7 +15,7 @@ const PlaceBets = () => {
 
 	return (
 		<div>
-			<form className="w-88" onSubmit={handleSubmit}>
+			<form className="w-88 m-32 border-4 border-red-700" onSubmit={handleSubmit}>
 				<label
 					className='mt-3 block'
 					htmlFor="betAmount"

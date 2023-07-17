@@ -1,5 +1,6 @@
 import { initialState } from "./GlobalContext.jsx";
 import {
+	DISPLAY_ALERT,
 	CLEAR_ALERT,
 	HIDE_WELCOME,
 	SETUP_GAME,
@@ -27,16 +28,23 @@ import {
 	DEALER_WIN,
 	PUSH,
 	NEW_DEAL,
+	CLEAR_HANDS
 
 } from "./actions.js";
 
 const Reducer = (state, action) => {
 
+	if (action.type === DISPLAY_ALERT) {
+		return {
+			...state,
+			alert: action.payload.alertText,
+			showAlert: true
+		}
+	}
 
 	if (action.type === CLEAR_ALERT) {
 		return {
 			...state,
-			isLoading: false,
 			showAlert: false,
 			alert: ''
 		}
@@ -74,10 +82,18 @@ const Reducer = (state, action) => {
 			...state,
 			canPlaceBets: false,
 			bet: action.payload.bet,
-			handInProgress: true,
 			player: {
-				bankroll: state.player.bankroll - state.bet
-			}
+				bankroll: state.player.bankroll - action.payload.bet
+			},
+			handInProgress: true,
+			playerOptions: false,
+			insuranceOption: false,
+			splitOption: false,
+			doubleOption: false,
+			hitOption: false,
+			newDealOption: false,
+			doubledHand: false,
+			splitHand: false
 		}
 	}
 
@@ -108,8 +124,6 @@ const Reducer = (state, action) => {
 		return {
 			...state,
 			isLoading: true,
-			alert: 'Checking for blackjack...',
-			showAlert: true
 		}
 	}
 
@@ -117,7 +131,6 @@ const Reducer = (state, action) => {
 		return {
 			...state,
 			isLoading: false,
-			alert: 'Congratulations! You have blackjack!',
 			player: {
 				...state.player,
 				hasBlackjack: true,
@@ -129,7 +142,6 @@ const Reducer = (state, action) => {
 		return {
 			...state,
 			isLoading: false,
-			alert: 'Dealer has blackjack!',
 			dealer: {
 				...state.dealer,
 				hasBlackjack: true
@@ -141,19 +153,13 @@ const Reducer = (state, action) => {
 		return {
 			...state,
 			isLoading: false,
-			showAlert: false,
-			alert: ''
 		}
 	}
 
 	if (action.type === HANDLE_BOTH_BLACKJACK) {
 		return {
 			...state,
-			alert: 'Player and dealer blackjack! Push!',
-			showAlert: true,
-			handInProgress: false,
-			newDealOption: true,
-			playerOptions: true,
+			placeBets: true,
 			player: {
 				...state.player,
 				bankroll: state.player.bankroll + state.bet
@@ -164,11 +170,7 @@ const Reducer = (state, action) => {
 	if (action.type === HANDLE_PLAYER_BLACKJACK) {
 		return {
 			...state,
-			alert: 'Congratulations! You have blackjack!',
-			showAlert: true,
-			handInProgress: false,
-			newDealOption: true,
-			playerOptions: true,
+			placeBets: true,
 			player: {
 				...state.player,
 				bankroll: state.player.bankroll + (state.bet * 1.5) + state.bet
@@ -178,10 +180,7 @@ const Reducer = (state, action) => {
 	if (action.type === HANDLE_DEALER_BLACKJACK) {
 		return {
 			...state,
-			alert: 'Dealer has blackjack!',
-			showAlert: true,
-			newDealOption: true,
-			playerOptions: true,
+			placeBets: true,
 		}
 	}
 
@@ -217,7 +216,7 @@ const Reducer = (state, action) => {
 	if (action.type === PLAYER_BUST) {
 		return {
 			...state,
-			playerOptions: true,
+			playerOptions: false,
 			splitOption: false,
 			doubleOption: false,
 			hitOption: false,
@@ -226,27 +225,20 @@ const Reducer = (state, action) => {
 				hand: action.payload.playerHand,
 				score: action.payload.playerScore,
 			},
-			alert: 'Player Bust! Try again!',
-			showAlert: true,
-			newDealOption: true,
 			canPlaceBets: true
 		}
 	}
 	if (action.type === PLAYER_HIT) {
 		return {
 			...state,
-			playerOptions: true,
 			splitOption: false,
 			doubleOption: false,
-			hitOption: true,
 			shoe: action.payload.currentShoe,
 			player: {
 				...state.player,
 				hand: action.payload.playerHand,
 				score: action.payload.playerScore
 			},
-			alert: 'Hit or Stay!',
-			showAlert: true
 		}
 	}
 
@@ -257,8 +249,6 @@ const Reducer = (state, action) => {
 			splitOption: false,
 			doubleOption: false,
 			hitOption: false,
-			alert: '',
-			showAlert: false
 		}
 	}
 
@@ -269,8 +259,6 @@ const Reducer = (state, action) => {
 			splitOption: false,
 			doubleOption: false,
 			hitOption: false,
-			alert: 'Double Down!',
-			showAlert: true,
 			doubledHand: true
 		}
 	}
@@ -278,33 +266,12 @@ const Reducer = (state, action) => {
 	if (action.type === DEALER_BUST) {
 		return {
 			...state,
-			shoe: action.payload.currentShoe,
 			player: {
 				...state.player,
 				bankroll: state.player.bankroll + state.bet + state.bet
 			},
-			dealer: {
-				...state.dealer,
-				hand: action.payload.dealerHand,
-				score: action.payload.dealerScore
-			},
-			alert: 'Dealer bust!',
-			showAlert: true,
 			canPlaceBets: true,
 			playerOptions: true,
-			newDealOption: true
-		}
-	}
-
-	if (action.type === DEALER_STAY) {
-		return {
-			...state,
-			shoe: action.payload.currentShoe,
-			dealer: {
-				...state.dealer,
-				hand: action.payload.dealerHand,
-				score: action.payload.dealerScore
-			},
 		}
 	}
 
@@ -327,21 +294,15 @@ const Reducer = (state, action) => {
 				...state.player,
 				bankroll: state.player.bankroll + state.bet + state.bet
 			},
-			alert: 'Player Win!!',
-			showAlert: true,
 			canPlaceBets: true,
 			playerOptions: true,
-			newDealOption: true
 		}
 	}
 	if (action.type === DEALER_WIN) {
 		return {
 			...state,
-			alert: 'Dealer Win :(',
-			showAlert: true,
 			canPlaceBets: true,
 			playerOptions: true,
-			newDealOption: true
 		}
 	}
 	if (action.type === PUSH) {
@@ -351,11 +312,14 @@ const Reducer = (state, action) => {
 				...state.player,
 				bankroll: state.player.bankroll + state.bet
 			},
-			alert: 'Push!',
-			showAlert: true,
 			canPlaceBets: true,
 			playerOptions: true,
-			newDealOption: true
+		}
+	}
+
+	if (action.type === CLEAR_HANDS) {
+		return {
+			...state,
 		}
 	}
 

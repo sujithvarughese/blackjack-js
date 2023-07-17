@@ -14,21 +14,16 @@ const Game = () => {
 
 
 	return (
-		<div>
-			<img src={tableIMG} alt="table"/>
-			{ showMenu && <Menu />}
-
-			{ canPlaceBets && <PlaceBets />}
-
-			{ showAlert && <Alert />}
-
-
-
-			{ handInProgress  && <Player />}
-
-			{ handInProgress && <Dealer />}
-
-			{ playerOptions && <PlayerOptions /> }
+		<div className="border-4 border-red-800">
+			<img src={tableIMG} className="w-max" alt="table"/>
+			<div className="flex justify-center">
+				{ showMenu && <Menu />}
+				{ canPlaceBets && <PlaceBets />}
+				{ showAlert && <Alert />}
+				{ handInProgress  && <Player />}
+				{ handInProgress && <Dealer />}
+				{ playerOptions && <PlayerOptions /> }
+			</div>
 
 		</div>
 	)

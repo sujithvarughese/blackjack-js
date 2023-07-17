@@ -3,6 +3,7 @@ import reducer from "./reducer.js";
 import deck from "../deck.js";
 
 import {
+	DISPLAY_ALERT,
 	CLEAR_ALERT,
 	HIDE_WELCOME,
 	SETUP_GAME,
@@ -29,7 +30,8 @@ import {
 	PLAYER_WIN,
 	DEALER_WIN,
 	PUSH,
-	NEW_DEAL
+	NEW_DEAL,
+	CLEAR_HANDS
 } from './actions.js'
 
 const initialState = {
@@ -54,7 +56,6 @@ const initialState = {
 	alert: '',
 	showAlert: false,
 	canPlaceBets: false,
-
 	playerOptions: false,
 	insuranceOption: false,
 	splitOption: false,
@@ -71,15 +72,18 @@ const GlobalProvider = ({ children }) => {
 
 	const [state, dispatch] = useReducer(reducer, initialState)
 
-	const displayAlert = () => {
-		dispatch({ type: DISPLAY_ALERT })
-		clearAlert()
+	const displayAlert = (alertText, ms = 1500) => {
+		dispatch({
+			type: DISPLAY_ALERT,
+			payload: { alertText }
+		})
+		clearAlert(ms)
 	}
 
-	const clearAlert = () => {
+	const clearAlert = (ms) => {
 		setTimeout(() => {
 			dispatch({ type: CLEAR_ALERT })
-		}, 1000)
+		}, ms)
 	}
 
 	// hide startup screen -> take user to main menu
@@ -104,7 +108,8 @@ const GlobalProvider = ({ children }) => {
 	// deal the first two face-up cards for both player and dealer,
 	//  set hands to global state, get hand values and set to global state
 	//  check for blackjacks and set to global state
-	const initialDeal = (bet) => {
+	const initialDeal = async (bet) => {
+		console.log(state);
 		dispatch({
 			type: INITIAL_DEAL_BEGIN,
 			payload : { bet }
@@ -143,22 +148,24 @@ const GlobalProvider = ({ children }) => {
 		dealerScore += nextCard.value
 		//---------------------------------//
 
-		dispatch({
+		await dispatch({
 			type: INITIAL_DEAL_SUCCESS,
 			payload : { currentShoe, playerHand, dealerHand, playerScore, dealerScore }
 		})
 
-		dispatch({
+		displayAlert('Checking for blackjack...')
+
+		await dispatch({
 			type: CHECK_BLACKJACK_BEGIN,
 		})
 
 		if (playerScore === 21) {
-			dispatch({
+			await dispatch({
 				type: SET_PLAYER_BLACKJACK,
 			})
 		}
 		if (dealerScore === 21) {
-			dispatch({
+			await dispatch({
 				type: SET_DEALER_BLACKJACK,
 			})
 		}
@@ -172,36 +179,79 @@ const GlobalProvider = ({ children }) => {
 
 	}
 
-	const handleBlackjack = () => {
+	const handleBlackjack = async () => {
 		if (state.player.hasBlackjack && state.dealer.hasBlackjack) {
-			dispatch({
+			displayAlert('Player and dealer blackjack. Push!')
+			await dispatch({
 				type: HANDLE_BOTH_BLACKJACK,
 			})
 		}
 		else if (state.player.hasBlackjack) {
-			dispatch({
+			displayAlert('Congratulations! You have blackjack!')
+			await dispatch({
 				type: HANDLE_PLAYER_BLACKJACK,
 			})
 		}
 		else if (state.dealer.hasBlackjack) {
-			dispatch({
+			displayAlert('Dealer has blackjack!')
+			await dispatch({
 				type: HANDLE_DEALER_BLACKJACK,
 			})
 		}
-		getInitialOptions()
+		else {
+			getInitialOptions()
+		}
+
 	}
 
-	const getInitialOptions = () => {
+	const getInitialOptions = async () => {
 		if (state.player.hand[0] === state.player.hand[1]) {
-			dispatch({
+			await dispatch({
 				type: DISPLAY_OPTIONS_ALL,
 			})
 		}
 		else {
-			dispatch({
+			await dispatch({
 				type: DISPLAY_OPTIONS_DOUBLE,
 			})
 		}
+	}
+	const insurance = () => {
+		console.log('insurance');
+	}
+	const split = () => {
+		console.log('split');
+	}
+
+	const double = async () => {
+		console.log('double');
+		const currentShoe = [...state.shoe]  // set temp shoe in order to update global state after deal
+		const playerHand = [...state.player.hand]  // temp hands for player and dealer that we put in state after deal
+		let playerScore = state.player.score
+
+		let nextCard = currentShoe.pop()
+
+		if (nextCard.value === 1 && playerScore <= 10) {
+			nextCard.value = 11
+		}
+		playerScore += nextCard.value
+		playerHand.push(nextCard)
+		if (playerScore > 21) {
+			displayAlert('Player Bust! Try again!')
+			await dispatch({
+				type: PLAYER_BUST,
+				payload: { currentShoe, playerHand, playerScore }
+			})
+		}
+		else {
+			await dispatch({
+				type: PLAYER_DOUBLE,
+				payload: { currentShoe, playerHand, playerScore }
+			})
+		}
+		setTimeout(() => {
+			dealerMove()
+		}, 1500)
 	}
 
 	const hit = () => {
@@ -219,6 +269,7 @@ const GlobalProvider = ({ children }) => {
 		playerHand.push(nextCard)
 
 		if (playerScore > 21) {
+			displayAlert('Player bust!')
 			dispatch({
 				type: PLAYER_BUST,
 				payload: { currentShoe, playerHand, playerScore }
@@ -233,7 +284,6 @@ const GlobalProvider = ({ children }) => {
 	}
 
 	const stay = () => {
-		console.log('stay');
 		dispatch({
 			type: PLAYER_STAY,
 		})
@@ -242,85 +292,62 @@ const GlobalProvider = ({ children }) => {
 		}, 1500)
 	}
 
-	const double = () => {
-		console.log('double');
-		const currentShoe = [...state.shoe]  // set temp shoe in order to update global state after deal
-		const playerHand = [...state.player.hand]  // temp hands for player and dealer that we put in state after deal
-		let playerScore = state.player.score
 
-		let nextCard = currentShoe.pop()
-		playerScore += nextCard.value
 
-		if (nextCard.value === 1 && playerScore <= 11) {
-			nextCard.value = 11
-		}
-		playerHand.push(nextCard)
-		if (playerScore > 21) {
-			dispatch({
-				type: PLAYER_BUST,
-				payload: { currentShoe, playerHand, playerScore }
-			})
-		}
-		else {
-			dispatch({
-				type: PLAYER_DOUBLE,
-				payload: { currentShoe, playerHand, playerScore }
-			})
-		}
-		setTimeout(() => {
-			dealerMove()
-		}, 1500)
-	}
-
-	const dealerMove = () => {
+	const dealerMove = async () => {
 		const currentShoe = [...state.shoe]  // set temp shoe in order to update global state after deal
 		const dealerHand = [...state.dealer.hand]  // temp hands for dealer that we put in state
 		let dealerScore = state.dealer.score
 
 		while (dealerScore <= 16) {
 			let nextCard = currentShoe.pop()
-			dealerScore += nextCard.value
 
 			// if next card is Ace and total hand value is 10 or less, set the Ace to 11
 			if (nextCard.value === 1 && dealerScore <= 10) {
 				nextCard.value = 11
 			}
+			dealerScore += nextCard.value
 			dealerHand.push(nextCard)
-			dispatch({
+
+			await dispatch({
 				type: DEALER_HIT,
 				payload: { currentShoe, dealerHand, dealerScore }
 			})
 		}
+		console.log(state);
 		if (dealerScore > 21) {
+			console.log('dealer bust');
+			displayAlert('Dealer bust! Player win!', 10000)
 			dispatch({
-				type: DEALER_BUST,
-				payload: { currentShoe, dealerHand, dealerScore }
+				type: PLAYER_WIN
 			})
 		}
 		else {
-			dispatch({
-				type: DEALER_STAY,
-				payload: { currentShoe, dealerHand, dealerScore }
-			})
+			setTimeout(() => {
+				determineWinner()
+			}, 1500)
 		}
-		setTimeout(() => {
-			determineWinner()
-		}, 1500)
+
+
 	}
 
 	const determineWinner = () => {
-		if (state.player.score <= 21 && state.dealer.hand <= 21) {
+
+		if (state.player.score <= 21 && state.dealer.score <= 21) {
 			if (state.player.score > state.dealer.score) {
+				displayAlert('Player win!', 10000)
 				dispatch({
 					type: PLAYER_WIN,
 				})
 			}
-			else if (state.player.score > state.dealer.score) {
+			else if (state.dealer.score > state.player.score) {
+				displayAlert('Dealer Win. You Lose!', 10000)
 				dispatch({
 					type: DEALER_WIN,
 				})
 			}
 			else {
+				displayAlert("Push!", 10000)
 				dispatch({
 					type: PUSH,
 				})
@@ -328,22 +355,20 @@ const GlobalProvider = ({ children }) => {
 		}
 	}
 
-	const split = () => {
-		console.log('split');
-	}
-
 	const newDeal = () => {
 		console.log('newDeal');
 	}
 
-	const insurance = () => {
-		console.log('insurance');
+	const clearHands = () => {
+
 	}
+
 
 	return (
 		<GlobalContext.Provider value={
 			{
 				...state,
+				displayAlert,
 				hideWelcome,
 				setupGame,
 				initialDeal,

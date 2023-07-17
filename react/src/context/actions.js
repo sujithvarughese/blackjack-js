@@ -1,3 +1,4 @@
+export const DISPLAY_ALERT = 'DISPLAY_ALERT'
 export const CLEAR_ALERT = 'CLEAR_ALERT'
 
 export const HIDE_WELCOME = 'HIDE_WELCOME'
@@ -36,3 +37,5 @@ export const DEALER_WIN = 'DEALER_WIN'
 export const PUSH = 'PUSH'
 
 export const NEW_DEAL = 'NEW_DEAL'
+
+export const CLEAR_HANDS = 'CLEAR_HANDS'

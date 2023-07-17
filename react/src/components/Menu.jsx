@@ -26,7 +26,7 @@ const Menu = () => {
 
 	return (
 		<div>
-			<form className="w-88" onSubmit={handleSubmit}>
+			<form className="w-88 border-4 border-red-300" onSubmit={handleSubmit}>
 
 				<p className="text-center m-10 text-2xl">Plan your downfall!</p>
 
