@@ -6,6 +6,8 @@ import {
 	DISPLAY_ALERT,
 	CLEAR_ALERT,
 	HIDE_WELCOME,
+
+	SET_INITIAL_DEAL,
 	SETUP_GAME,
 	INITIAL_DEAL_BEGIN,
 	INITIAL_DEAL_SUCCESS,
@@ -35,20 +37,15 @@ import {
 } from './actions.js'
 
 const initialState = {
-	numDecks: 1,
 	shoe: [],
-	bet: 0,
-	player: {
-		hasBlackjack: false,
-		hand: [],
-		score: 0,
-		bankroll: 0,
-	},
-	dealer: {
-		hasBlackjack: false,
-		hand: [],
-		score: 0
-	},
+	bankroll: 0,
+	bet: 25,
+	playerHand: [],
+	playerBlackjack: false,
+	playerScore: 0,
+	dealerHand: [],
+	dealerBlackjack: false,
+	dealerScore: 0,
 	isLoading: false,
 	handInProgress: false,
 	showWelcome: true,
@@ -91,131 +88,55 @@ const GlobalProvider = ({ children }) => {
 		dispatch({ type: HIDE_WELCOME })
 	}
 
-	// after user selects values, create the shoe with appropriate number of decks
-	const setupGame = (numDecks, playerBankroll) => {
-		const newShoe = []
-		for (let i = 0; i < numDecks; i++) {
-			newShoe.push(...deck)
-			newShoe.sort(() => Math.random() - 0.5)
-		}
-		newShoe.sort(() => Math.random() - 0.5)
+	const placeBet = async (bet) => {
+		console.log(state);
 		dispatch({
-			type: SETUP_GAME,
-			payload: { numDecks, playerBankroll, newShoe }
+			type: INITIAL_DEAL_BEGIN,
+			payload: { bet }
 		})
 	}
 
 	// deal the first two face-up cards for both player and dealer,
 	//  set hands to global state, get hand values and set to global state
 	//  check for blackjacks and set to global state
-	const initialDeal = async (bet) => {
-		console.log(state);
-		dispatch({
-			type: INITIAL_DEAL_BEGIN,
-			payload : { bet }
-		})
-		const currentShoe = [...state.shoe]  // set temp shoe in order to update global state after deal
-		const playerHand = []  // temp hands for player and dealer that we put in state after deal
-		const dealerHand = []
 
-		//----deal out cards, if Ace is dealt, change value from 1 to 11---//
-		let nextCard = currentShoe.pop()
-		if (nextCard.value === 1) {
-			nextCard.value = 11
-		}
-		playerHand.push(nextCard)
-		let playerScore = nextCard.value
 
-		nextCard = currentShoe.pop()
-		if (nextCard.value === 1) {
-			nextCard.value = 11
-		}
-		dealerHand.push(nextCard)
-		let dealerScore = nextCard.value
-
-		nextCard = currentShoe.pop()
-		if (nextCard.value === 1) {
-			nextCard.value = 11
-		}
-		playerHand.push(nextCard)
-		playerScore += nextCard.value
-
-		nextCard = currentShoe.pop()
-		if (nextCard.value === 1) {
-			nextCard.value = 11
-		}
-		dealerHand.push(nextCard)
-		dealerScore += nextCard.value
-		//---------------------------------//
-
-		await dispatch({
-			type: INITIAL_DEAL_SUCCESS,
-			payload : { currentShoe, playerHand, dealerHand, playerScore, dealerScore }
-		})
-
-		displayAlert('Checking for blackjack...')
-
-		await dispatch({
-			type: CHECK_BLACKJACK_BEGIN,
-		})
-
-		if (playerScore === 21) {
-			await dispatch({
-				type: SET_PLAYER_BLACKJACK,
-			})
-		}
-		if (dealerScore === 21) {
-			await dispatch({
-				type: SET_DEALER_BLACKJACK,
-			})
-		}
-		// wait so 'Checking for blackjack...' alert can be seen by user before clearing
-		setTimeout(() => {
-			dispatch({
-				type: CHECK_BLACKJACK_SUCCESS
-			})
-			handleBlackjack()
-		}, 1500)
-
-	}
-
-	const handleBlackjack = async () => {
-		if (state.player.hasBlackjack && state.dealer.hasBlackjack) {
+	const handleBlackjack = async (playerBlackjack, dealerBlackjack) => {
+		if (playerBlackjack && dealerBlackjack) {
 			displayAlert('Player and dealer blackjack. Push!')
 			await dispatch({
 				type: HANDLE_BOTH_BLACKJACK,
 			})
-		}
-		else if (state.player.hasBlackjack) {
+		} else if (playerBlackjack) {
 			displayAlert('Congratulations! You have blackjack!')
 			await dispatch({
 				type: HANDLE_PLAYER_BLACKJACK,
 			})
-		}
-		else if (state.dealer.hasBlackjack) {
+		} else {
 			displayAlert('Dealer has blackjack!')
 			await dispatch({
 				type: HANDLE_DEALER_BLACKJACK,
 			})
 		}
-		else {
-			getInitialOptions()
-		}
-
 	}
 
-	const getInitialOptions = async () => {
-		if (state.player.hand[0] === state.player.hand[1]) {
-			await dispatch({
-				type: DISPLAY_OPTIONS_ALL,
-			})
-		}
-		else {
-			await dispatch({
-				type: DISPLAY_OPTIONS_DOUBLE,
-			})
-		}
+	const handleInitialDeal = async(shoe, playerHand, dealerHand, playerScore, dealerScore, playerBankroll, bet, splitOption) => {
+		dispatch({
+			type: SET_INITIAL_DEAL,
+			payload: {
+				shoe,
+				playerHand,
+				dealerHand,
+				playerScore,
+				dealerScore,
+				playerBankroll,
+				bet,
+				splitOption
+			}
+		})
 	}
+
+
 	const insurance = () => {
 		console.log('insurance');
 	}
@@ -255,6 +176,7 @@ const GlobalProvider = ({ children }) => {
 	}
 
 	const hit = () => {
+		console.log('HIT');
 		const currentShoe = [...state.shoe]  // set temp shoe in order to update global state after deal
 		const playerHand = [...state.player.hand]  // temp hands for player that we put in state after deal
 		let playerScore = state.player.score
@@ -370,8 +292,9 @@ const GlobalProvider = ({ children }) => {
 				...state,
 				displayAlert,
 				hideWelcome,
-				setupGame,
-				initialDeal,
+				handleInitialDeal,
+				handleBlackjack,
+				placeBet,
 				hit,
 				stay,
 				double,

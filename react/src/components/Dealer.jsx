@@ -3,16 +3,16 @@ import { useEffect } from "react";
 import cardBackIMG from "../images/backs/astronaut.svg";
 
 const Dealer = () => {
-  const { dealer } = useGlobalContext();
-  const { hasBlackjack, hand, score } = dealer;
+  const { dealerHand, dealerScore } = useGlobalContext();
+
 
   return (
     <div className="flex absolute top-0 justify-center">
 
-      <div className="text-4xl text-stone-100 self-center">{dealer.score}</div>
+      <div className="text-4xl text-stone-100 self-center">{dealerScore}</div>
 
       <div className="flex scale-50 gap-1">
-        {dealer?.hand.map((card, index) => {
+        {dealerHand?.map((card, index) => {
           return (
             <div key={index}>
               {

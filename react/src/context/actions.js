@@ -2,6 +2,10 @@ export const DISPLAY_ALERT = 'DISPLAY_ALERT'
 export const CLEAR_ALERT = 'CLEAR_ALERT'
 
 export const HIDE_WELCOME = 'HIDE_WELCOME'
+
+export const SET_INITIAL_DEAL = 'SET_INITIAL_DEAL'
+
+
 export const SETUP_GAME = 'SETUP_GAME'
 
 export const INITIAL_DEAL_BEGIN = 'INITIAL_DEAL_BEGIN'

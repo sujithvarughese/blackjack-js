@@ -3,6 +3,9 @@ import {
 	DISPLAY_ALERT,
 	CLEAR_ALERT,
 	HIDE_WELCOME,
+
+	SET_INITIAL_DEAL,
+
 	SETUP_GAME,
 	INITIAL_DEAL_BEGIN,
 	INITIAL_DEAL_SUCCESS,
@@ -55,6 +58,25 @@ const Reducer = (state, action) => {
 			...state,
 			showWelcome: false,
 			showMenu: true
+		}
+	}
+
+	if (action.type === SET_INITIAL_DEAL) {
+		return {
+			...state,
+			shoe: action.payload.shoe,
+			playerHand: action.payload.playerHand,
+			dealerHand: action.payload.dealerHand,
+			playerScore: action.payload.playerScore,
+			dealerScore: action.payload.dealerScore,
+			playerBankroll: action.payload.playerBankroll,
+			bet: action.payload.bet,
+			splitOption: action.payload.splitOption,
+			showMenu: false,
+			handInProgress: true,
+			playerOptions: true,
+			doubleOption: true,
+			hitOption: true
 		}
 	}
 

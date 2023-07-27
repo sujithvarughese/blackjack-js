@@ -7,7 +7,7 @@ const App = () => {
    const { showWelcome } = useGlobalContext()
 
   return (
-    <div className="max-w-5xl border-4 border-red-300">
+    <div className="max-w-5xl mx-auto h-screen">
        {showWelcome ? <Welcome /> : < Game/>}
     </div>
   )

@@ -3,14 +3,14 @@ import { useState } from "react";
 
 const PlaceBets = () => {
 
-	const { initialDeal, player, dealer } = useGlobalContext()
+	const { placeBet, player, dealer } = useGlobalContext()
 
 	const [bet, setBet] = useState(25)
 
 	// initial bet (global function) places the initial wager into global state, then deals the initial deal (also sets hands and values to global state)
 	const handleSubmit = (e) => {
 		e.preventDefault()
-		initialDeal(bet)
+		placeBet(bet)
 	}
 
 	return (
