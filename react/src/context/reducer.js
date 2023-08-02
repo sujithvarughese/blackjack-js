@@ -1,36 +1,27 @@
-import { initialState } from "./GlobalContext.jsx";
+
 import {
 	DISPLAY_ALERT,
 	CLEAR_ALERT,
 	HIDE_WELCOME,
-
+	SETUP_GAME,
+	PLACE_BETS,
 	SET_INITIAL_DEAL,
 
-	SETUP_GAME,
-	INITIAL_DEAL_BEGIN,
-	INITIAL_DEAL_SUCCESS,
-	CHECK_BLACKJACK_BEGIN,
-	SET_PLAYER_BLACKJACK,
-	SET_DEALER_BLACKJACK,
-	CHECK_BLACKJACK_SUCCESS,
 	HANDLE_BOTH_BLACKJACK,
 	HANDLE_PLAYER_BLACKJACK,
 	HANDLE_DEALER_BLACKJACK,
-	DISPLAY_OPTIONS_ALL,
-	DISPLAY_OPTIONS_DOUBLE,
-	DISPLAY_OPTIONS_NORMAL,
+
 	PLAYER_BUST,
-	PLAYER_HIT,
+	PLAYER_SAFE,
 	PLAYER_DOUBLE,
 	PLAYER_STAY,
-	DEALER_BUST,
-	DEALER_HIT,
-	DEALER_STAY,
 	PLAYER_SPLIT,
+	DEALER_BUST,
+	DEALER_HIT
+	DEALER_SAFE,
 	PLAYER_WIN,
 	DEALER_WIN,
 	PUSH,
-	NEW_DEAL,
 	CLEAR_HANDS
 
 } from "./actions.js";
@@ -61,16 +52,41 @@ const Reducer = (state, action) => {
 		}
 	}
 
+	if (action.type === SETUP_GAME) {
+		return {
+			...state,
+			shoe: action.payload.shoe,
+			playerBankroll: action.payload.playerBankroll,
+			canPlaceBets: true,
+			showMenu: false
+		}
+	}
+
+	if (action.type === PLACE_BETS) {
+		return {
+			...state,
+			canPlaceBets: false,
+			handInProgress: true
+		}
+	}
+
+	// -user selected values from main menu are put into the global state
+	// -shoe is loaded with number of decks chosen by user
+	// -bankroll for user set into global state
+	// -passes the menu screen to allow user to place a wager
+	// -cards are dealt to both player and dealer
+	// -hands and scores are set in state
+	// -shoe after the initial deal set in state
+	// -cards should be rendered and user should be prompted an action based on hand value
 	if (action.type === SET_INITIAL_DEAL) {
 		return {
 			...state,
 			shoe: action.payload.shoe,
+			dealerCardShown: false,
 			playerHand: action.payload.playerHand,
 			dealerHand: action.payload.dealerHand,
 			playerScore: action.payload.playerScore,
 			dealerScore: action.payload.dealerScore,
-			playerBankroll: action.payload.playerBankroll,
-			bet: action.payload.bet,
 			splitOption: action.payload.splitOption,
 			showMenu: false,
 			handInProgress: true,
@@ -80,160 +96,52 @@ const Reducer = (state, action) => {
 		}
 	}
 
-	// -user selected values from main menu are put into the global state
-	// -shoe is loaded with number of decks chosen by user
-	// -bankroll for user set into global state
-	// -passes the menu screen to allow user to place a wager
-	if (action.type === SETUP_GAME) {
-		return {
-			...state,
-			showMenu: false,
-			canPlaceBets: true,
-			numDecks: action.payload.numDecks,
-			shoe: action.payload.newShoe,
-			player: {
-				...state.player,
-				bankroll: action.payload.playerBankroll
-			},
-		}
-	}
-
-	// -bet selected by user put into state, and bet option disabled
-	if (action.type === INITIAL_DEAL_BEGIN) {
-		return {
-			...state,
-			canPlaceBets: false,
-			bet: action.payload.bet,
-			player: {
-				bankroll: state.player.bankroll - action.payload.bet
-			},
-			handInProgress: true,
-			playerOptions: false,
-			insuranceOption: false,
-			splitOption: false,
-			doubleOption: false,
-			hitOption: false,
-			newDealOption: false,
-			doubledHand: false,
-			splitHand: false
-		}
-	}
-
-	// -cards are dealt to both player and dealer
-	// -hands and scores are set in state
-	// -shoe after the initial deal set in state
-	// -cards should be rendered and user should be prompted an action based on hand value
-	if (action.type === INITIAL_DEAL_SUCCESS) {
-		return {
-			...state,
-			shoe: action.payload.currentShoe,
-			player: {
-				...state.player,
-				hand: action.payload.playerHand,
-				score: action.payload.playerScore
-			},
-			dealer: {
-				...state.dealer,
-				hand: action.payload.dealerHand,
-				score: action.payload.dealerScore
-			}
-		}
-	}
-	// -after initial deal, check both player and dealer for blackjack
-	// -if blackjack, show appropriate alert and square up bankroll
-	// -user will have to click the alert to proceed to new hand
-	if (action.type === CHECK_BLACKJACK_BEGIN) {
-		return {
-			...state,
-			isLoading: true,
-		}
-	}
-
-	if (action.type === SET_PLAYER_BLACKJACK) {
-		return {
-			...state,
-			isLoading: false,
-			player: {
-				...state.player,
-				hasBlackjack: true,
-			},
-		}
-	}
-
-	if (action.type === SET_DEALER_BLACKJACK) {
-		return {
-			...state,
-			isLoading: false,
-			dealer: {
-				...state.dealer,
-				hasBlackjack: true
-			}
-		}
-	}
-
-	if (action.type === CHECK_BLACKJACK_SUCCESS) {
-		return {
-			...state,
-			isLoading: false,
-		}
-	}
-
 	if (action.type === HANDLE_BOTH_BLACKJACK) {
 		return {
 			...state,
+			shoe: action.payload.shoe,
+			dealerCardShown: true,
+			playerHand: action.payload.playerHand,
+			dealerHand: action.payload.dealerHand,
+			playerScore: action.payload.playerScore,
+			dealerScore: action.payload.dealerScore,
 			placeBets: true,
-			player: {
-				...state.player,
-				bankroll: state.player.bankroll + state.bet
-			}
+			playerOptions: true,
+			// return bet to player
+			playerBankroll: state.playerBankroll + state.bet
 		}
 	}
-
 	if (action.type === HANDLE_PLAYER_BLACKJACK) {
 		return {
 			...state,
+			shoe: action.payload.shoe,
+			dealerCardShown: true,
+			playerHand: action.payload.playerHand,
+			dealerHand: action.payload.dealerHand,
+			playerScore: action.payload.playerScore,
+			dealerScore: action.payload.dealerScore,
 			placeBets: true,
-			player: {
-				...state.player,
-				bankroll: state.player.bankroll + (state.bet * 1.5) + state.bet
-			}
+			playerOptions: true,
+			// blackjack pays 2:1
+			playerBankroll: state.playerBankroll + (state.bet * 1.5) + state.bet
 		}
 	}
+
 	if (action.type === HANDLE_DEALER_BLACKJACK) {
 		return {
 			...state,
+			shoe: action.payload.shoe,
+			dealerCardShown: true,
+			playerHand: action.payload.playerHand,
+			dealerHand: action.payload.dealerHand,
+			playerScore: action.payload.playerScore,
+			dealerScore: action.payload.dealerScore,
 			placeBets: true,
+			playerOptions: true,
 		}
 	}
 
-	if (action.type === DISPLAY_OPTIONS_ALL) {
-		return {
-			...state,
-			playerOptions: true,
-			splitOption: true,
-			doubleOption: true,
-			hitOption: true
-		}
-	}
 
-	if (action.type === DISPLAY_OPTIONS_DOUBLE) {
-		return {
-			...state,
-			playerOptions: true,
-			splitOption: false,
-			doubleOption: true,
-			hitOption: true
-		}
-	}
-	if (action.type === DISPLAY_OPTIONS_NORMAL) {
-		return {
-			...state,
-			playerOptions: true,
-			splitOption: false,
-			doubleOption: false,
-			hitOption: true
-		}
-	}
 
 	if (action.type === PLAYER_BUST) {
 		return {
@@ -242,25 +150,21 @@ const Reducer = (state, action) => {
 			splitOption: false,
 			doubleOption: false,
 			hitOption: false,
-			player: {
-				...state.player,
-				hand: action.payload.playerHand,
-				score: action.payload.playerScore,
-			},
-			canPlaceBets: true
+			shoe: action.payload.shoe,
+			playerHand: action.payload.playerHand,
+			playerScore: action.payload.playerScore,
+			canPlaceBets: true,
+			dealerCardShown: true
 		}
 	}
-	if (action.type === PLAYER_HIT) {
+
+	if (action.type === PLAYER_SAFE) {
 		return {
 			...state,
-			splitOption: false,
-			doubleOption: false,
-			shoe: action.payload.currentShoe,
-			player: {
-				...state.player,
-				hand: action.payload.playerHand,
-				score: action.payload.playerScore
-			},
+			shoe: action.payload.shoe,
+			playerHand: action.payload.playerHand,
+			playerScore: action.payload.playerScore,
+
 		}
 	}
 
@@ -271,6 +175,7 @@ const Reducer = (state, action) => {
 			splitOption: false,
 			doubleOption: false,
 			hitOption: false,
+			dealerCardShown: true
 		}
 	}
 
@@ -288,34 +193,38 @@ const Reducer = (state, action) => {
 	if (action.type === DEALER_BUST) {
 		return {
 			...state,
-			player: {
-				...state.player,
-				bankroll: state.player.bankroll + state.bet + state.bet
-			},
+			shoe: action.payload.shoe,
+			dealerHand: action.payload.dealerHand,
+			playerBankroll: state.playerBankroll + state.bet + state.bet,
 			canPlaceBets: true,
 			playerOptions: true,
 		}
 	}
 
+
+
+	if (action.type === DEALER_SAFE) {
+		return {
+			...state,
+			shoe: action.payload.shoe,
+			dealerHand: action.payload.dealerHand,
+			dealerScore: action.payload.dealerScore,
+
+		}
+	}
 	if (action.type === DEALER_HIT) {
 		return {
 			...state,
-			shoe: action.payload.currentShoe,
-			dealer: {
-				...state.dealer,
-				hand: action.payload.dealerHand,
-				score: action.payload.dealerScore
-			},
+			shoe: action.payload.shoe,
+			dealerHand: action.payload.dealerHand,
+			dealerScore: action.payload.dealerScore,
 		}
 	}
 
 	if (action.type === PLAYER_WIN) {
 		return {
 			...state,
-			player: {
-				...state.player,
-				bankroll: state.player.bankroll + state.bet + state.bet
-			},
+			playerBankroll: state.playerBankroll + state.bet + state.bet,
 			canPlaceBets: true,
 			playerOptions: true,
 		}
@@ -330,10 +239,7 @@ const Reducer = (state, action) => {
 	if (action.type === PUSH) {
 		return {
 			...state,
-			player: {
-				...state.player,
-				bankroll: state.player.bankroll + state.bet
-			},
+			playerBankroll: state.playerBankroll + state.bet,
 			canPlaceBets: true,
 			playerOptions: true,
 		}

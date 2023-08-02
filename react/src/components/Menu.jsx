@@ -9,21 +9,38 @@ const initialState = {
 	bet: 25
 }
 
-const Menu = ({ setupGame }) => {
+const Menu = () => {
 
 	const [values, setValues] = useState(initialState)
 
+	const { setupGame } = useGlobalContext()
 	// set state values as user types
 	const handleChange = (e) => {
 		setValues({...values, [e.target.name]: e.target.value})
 	}
 
 	// send values to set in global state
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault()
-		// local function
-		setupGame(values.numDecks, values.playerBankroll, values.bet)
+		createShoe(values.numDecks)
+
 	}
+	// create shoe function creates shoe and sends to reducer to set in global state
+	const createShoe = (numDecks = 1) => {
+		// temp shoe array
+		const shoe = []
+		for (let i = 0; i < numDecks; i++) {
+			// push full deck array to newShoe array
+			shoe.push(...deck)
+			// shuffle
+			shoe.sort(() => Math.random() - 0.5)
+		}
+		// shuffle again once all decks added
+		shoe.sort(() => Math.random() - 0.5)
+		setupGame(shoe, values.playerBankroll)
+	}
+
+
 
 	return (
 		<div>
@@ -51,16 +68,6 @@ const Menu = ({ setupGame }) => {
 					onChange={handleChange}
 				/>
 
-				<label htmlFor="bet">Initial bet?</label>
-				<input
-					className="bg-color-grey shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-					type="number"
-					name="bet"
-					value={values.bet}
-					min="25" max="1000"
-					onChange={handleChange}
-				/>
-
 				<button
 					className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded text-xs"
 					type="submit"
@@ -72,78 +79,5 @@ const Menu = ({ setupGame }) => {
 		</div>
 	);
 };
-
-/*
-// after user selects values, create the shoe with appropriate number of decks
-const setupGame = (numDecks, playerBankroll, bet) => {
-	const newShoe = []
-	for (let i = 0; i < numDecks; i++) {
-		newShoe.push(...deck)
-		newShoe.sort(() => Math.random() - 0.5)
-	}
-	newShoe.sort(() => Math.random() - 0.5)
-	initialDeal(playerBankroll, bet, newShoe)
-}
-
-const initialDeal = (playerBankroll, bet, newShoe) => {
-
-	const { handleBlackjack } = useGlobalContext()
-
-	const playerHand = []  // temp hands for player and dealer that we put in state after deal
-	const dealerHand = []
-
-	//----deal out cards, if Ace is dealt, change value from 1 to 11---//
-	let nextCard = newShoe.pop()
-	if (nextCard.value === 1) {
-		nextCard.value = 11
-	}
-	playerHand.push(nextCard)
-	let playerScore = nextCard.value
-
-	nextCard = newShoe.pop()
-	if (nextCard.value === 1) {
-		nextCard.value = 11
-	}
-	dealerHand.push(nextCard)
-	let dealerScore = nextCard.value
-
-	nextCard = newShoe.pop()
-	if (nextCard.value === 1) {
-		nextCard.value = 11
-	}
-	playerHand.push(nextCard)
-	playerScore += nextCard.value
-
-	nextCard = newShoe.pop()
-	if (nextCard.value === 1) {
-		nextCard.value = 11
-	}
-	dealerHand.push(nextCard)
-	dealerScore += nextCard.value
-
-	// check for blackjacks
-	let playerBlackjack = false
-	let dealerBlackjack = false
-	if (playerScore === 21) {
-		playerBlackjack = true
-	}
-	if (dealerScore === 21) {
-		dealerBlackjack = true
-	}
-	if (playerBlackjack || dealerBlackjack) {
-		handleBlackjack(playerBlackjack, dealerBlackjack)
-	}
-
-	// if no blackjacks, set values to global state, then prompt user options
-	let splitOption = false
-	if (playerHand[0].value === playerHand[1].value) {
-		splitOption = true
-	}
-
-}
-
-*/
-
-
 
 export default Menu;

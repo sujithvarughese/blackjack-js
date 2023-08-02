@@ -3,7 +3,8 @@ import { useEffect } from "react";
 import cardBackIMG from "../images/backs/astronaut.svg";
 
 const Dealer = () => {
-  const { dealerHand, dealerScore } = useGlobalContext();
+  const { dealerHand, dealerScore, dealerCardShown } = useGlobalContext();
+
 
 
   return (
@@ -16,7 +17,7 @@ const Dealer = () => {
           return (
             <div key={index}>
               {
-                 index === 1 ?
+                 (index === 1 && !dealerCardShown)?
                     <img src={cardBackIMG} alt="card-back" />
                     :
                     <img src={card.img} alt={card.value} />

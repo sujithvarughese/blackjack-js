@@ -1,4 +1,5 @@
 import { useGlobalContext } from "../context/GlobalContext.jsx";
+import { PLAYER_BUST, PLAYER_HIT } from "../context/actions.js";
 
 const PlayerOptions = () => {
 
@@ -8,62 +9,37 @@ const PlayerOptions = () => {
 		splitOption,
 		doubleOption,
 		hitOption,
-		newDeal,
-		insurance,
-		split,
-		double,
+		stayOption,
 		hit,
-		stay
+		stay,
+		double,
+		split
 	} = useGlobalContext()
 
 	return (
-		<div>
+		<div className="flex gap-1">
 
 			{hitOption &&
 				<>
-					<button onClick={console.log('HIT')}
-						className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded text-xs"
-					>hit!
-					</button>
-
-					<button onClick={stay}
-						className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded text-xs"
-					>stay!
-					</button>
+					<button onClick={hit} className="btn">hit!</button>
+					<button onClick={stay} className="btn">stay!</button>
 				</>
-			}
-			{
-				newDealOption
-				&&
-				<button onClick={newDeal}
-					className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded text-xs"
-				>Play Again!
-				</button>
-			}
-			{
-				insuranceOption
-				&&
-				<button onClick={insurance}
-					className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded text-xs"
-				>Take Insurance!
-				</button>
-			}
-			{
-				splitOption
-					&&
-				<button onClick={split}
-					className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded text-xs"
-				>split!
-				</button>
-			}
 
-			{
-				doubleOption
-					&&
-				<button onClick={double}
-					className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded text-xs"
-				>double!
-				</button>
+			}
+			{stayOption &&
+				<button onClick={stay} className="btn">stay!</button>
+			}
+			{newDealOption &&
+				<button onClick={newDeal} className="btn">Play Again!</button>
+			}
+			{insuranceOption &&
+				<button onClick={insurance} className="btn">Take Insurance!</button>
+			}
+			{splitOption &&
+				<button onClick={split} className="btn">split!</button>
+			}
+			{doubleOption &&
+				<button onClick={double} className="btn">double!</button>
 			}
 
 
