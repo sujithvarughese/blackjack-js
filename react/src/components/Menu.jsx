@@ -43,40 +43,39 @@ const Menu = () => {
 
 
 	return (
-		<div>
-			<form className="form" onSubmit={handleSubmit}>
 
-				<p className="form-title">Plan your downfall!</p>
+			<form className="form w-80 mx-auto" onSubmit={handleSubmit}>
 
-				<label className="form-label" htmlFor="numDecks">How many decks?</label>
-				<input
-					className="form-input"
-					type="number"
-					name="numDecks"
-					value={values.numDecks}
-					min="1" max="8"
-					onChange={handleChange}
-				/>
+				<p className="form-title">Main Menu</p>
 
-				<label className="form-label" htmlFor="playerBankroll">How much money you wanna lose?</label>
-				<input
-					className="form-input"
-					type="number"
-					name="playerBankroll"
-					value={values.playerBankroll}
-					min="100" max="10000"
-					onChange={handleChange}
-				/>
+				<div className="form-content">
+					<label className="form-label" htmlFor="numDecks">How many decks?</label>
+					<input
+						className="form-input"
+						type="number"
+						name="numDecks"
+						value={values.numDecks}
+						min="1" max="8"
+						onChange={handleChange}
+					/>
 
-				<button
-					className="btn"
-					type="submit"
-				>submit
-				</button>
+					<label className="form-label" htmlFor="playerBankroll">Choose a starting bankroll</label>
+					<input
+						className="form-input"
+						type="number"
+						name="playerBankroll"
+						value={values.playerBankroll}
+						min="100" max="10000"
+						onChange={handleChange}
+					/>
+				</div>
+
+
+				<button className="btn" type="submit">Start!</button>
 
 			</form>
 
-		</div>
+
 	);
 };
 

@@ -5,7 +5,7 @@ const Alert = () => {
 	const { alert } = useGlobalContext()
 
 	return (
-		<div className="border-4 border-red-300">
+		<div className="alert-text">
 			{alert}
 		</div>
 	);

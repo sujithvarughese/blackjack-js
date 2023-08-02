@@ -16,7 +16,7 @@ const PlayerOptions = () => {
 	} = useGlobalContext()
 
 	return (
-		<div className="flex gap-1">
+		<div className="flex gap-3">
 
 			{hitOption &&
 				<>

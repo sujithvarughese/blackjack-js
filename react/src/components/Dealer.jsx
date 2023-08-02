@@ -8,25 +8,21 @@ const Dealer = () => {
 
 
   return (
-    <div className="flex absolute top-0 justify-center">
-
-      <div className="text-4xl text-stone-100 self-center">{dealerScore}</div>
-
-      <div className="flex scale-50 gap-1">
-        {dealerHand?.map((card, index) => {
+    <>
+        {dealerHand.map((card, index) => {
           return (
-            <div key={index}>
-              {
+
+
                  (index === 1 && !dealerCardShown)?
-                    <img src={cardBackIMG} alt="card-back" />
+                    <img key={card.img} className="card-img border-2 border-orange-500" src={cardBackIMG} alt="card-back" />
                     :
-                    <img src={card.img} alt={card.value} />
-              }
-            </div>
+                    <img key={card.img} className="card-img border-2 border-orange-500" src={card.img} alt={card.value} />
+
+
           );
         })}
-      </div>
-    </div>
+
+    </>
   );
 };
 
