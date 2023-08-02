@@ -1,7 +1,7 @@
 import { useGlobalContext } from "../context/GlobalContext.jsx";
 
 const Player = () => {
-  const { playerBankroll, playerScore, playerHand, bet, shoe } = useGlobalContext();
+  const { bankroll, playerScore, playerHand, bet, shoe } = useGlobalContext();
 
 
 
@@ -10,7 +10,7 @@ const Player = () => {
 
        <div className="flex justify-around pt-11 text-4xl text-stone-100">
          <div>Bet: {bet}</div>
-         <div>Bankroll: {playerBankroll}</div>
+         <div>Bankroll: {bankroll}</div>
          <div>{playerScore}</div>
       </div>
 

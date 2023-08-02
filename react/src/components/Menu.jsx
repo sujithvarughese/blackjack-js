@@ -44,13 +44,13 @@ const Menu = () => {
 
 	return (
 		<div>
-			<form className="w-88 border-4 border-red-300" onSubmit={handleSubmit}>
+			<form className="form" onSubmit={handleSubmit}>
 
-				<p className="text-center m-10 text-2xl">Plan your downfall!</p>
+				<p className="form-title">Plan your downfall!</p>
 
-				<label htmlFor="numDecks">How many decks?</label>
+				<label className="form-label" htmlFor="numDecks">How many decks?</label>
 				<input
-					className="bg-color-grey shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+					className="form-input"
 					type="number"
 					name="numDecks"
 					value={values.numDecks}
@@ -58,9 +58,9 @@ const Menu = () => {
 					onChange={handleChange}
 				/>
 
-				<label htmlFor="playerBankroll">How much money you wanna lose?</label>
+				<label className="form-label" htmlFor="playerBankroll">How much money you wanna lose?</label>
 				<input
-					className="bg-color-grey shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+					className="form-input"
 					type="number"
 					name="playerBankroll"
 					value={values.playerBankroll}
@@ -69,7 +69,7 @@ const Menu = () => {
 				/>
 
 				<button
-					className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded text-xs"
+					className="btn"
 					type="submit"
 				>submit
 				</button>

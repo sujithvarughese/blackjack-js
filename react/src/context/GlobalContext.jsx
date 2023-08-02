@@ -13,12 +13,9 @@ import {
 	HANDLE_BOTH_BLACKJACK,
 	HANDLE_PLAYER_BLACKJACK,
 	HANDLE_DEALER_BLACKJACK,
-	DISPLAY_OPTIONS_ALL,
-	DISPLAY_OPTIONS_DOUBLE,
-	DISPLAY_OPTIONS_NORMAL,
+
 	PLAYER_BUST,
 	PLAYER_SAFE,
-	PLAYER_HIT,
 	PLAYER_STAY,
 	PLAYER_SPLIT,
 	PLAYER_DOUBLE,
@@ -29,8 +26,6 @@ import {
 	PLAYER_WIN,
 	DEALER_WIN,
 	PUSH,
-	NEW_DEAL,
-	CLEAR_HANDS
 } from './actions.js'
 
 const initialState = {
@@ -38,10 +33,12 @@ const initialState = {
 	playerBankroll: 0,
 	bet: 25,
 	playerHand: [],
+	playerAces: 0,
 	playerBlackjack: false,
 	playerScore: 0,
 	dealerHand: [],
 	dealerBlackjack: false,
+	dealerAces: 0,
 	dealerScore: 0,
 	isLoading: false,
 	handInProgress: false,
@@ -90,9 +87,7 @@ const GlobalProvider = ({ children }) => {
 		dispatch({ type: HIDE_WELCOME })
 	}
 
-	// deal the first two face-up cards for both player and dealer,
-	//  set hands to global state, get hand values and set to global state
-	//  check for blackjacks and set to global state
+	// after user chooses numDecks and bankroll, create shoe of cards, set shoe and bankroll to global state
 	const setupGame = (shoe, playerBankroll) => {
 		dispatch({
 			type: SETUP_GAME,
@@ -100,7 +95,7 @@ const GlobalProvider = ({ children }) => {
 
 		})
 	}
-
+	// user places initial bet, set to state, then cards are dealt
 	const placeBet = (bet) => {
 		dispatch({
 			type: PLACE_BETS,
@@ -113,10 +108,12 @@ const GlobalProvider = ({ children }) => {
 		const currentShoe = [...state.shoe]
 		const playerHand = []  // temp hands for player and dealer that we put in state after deal
 		const dealerHand = []
-
+		let playerAces = state.playerAces
+		let dealerAces = state.dealerAces
 		//----deal out cards, if Ace is dealt, change value from 1 to 11---//
 		let nextCard = currentShoe.pop()
 		if (nextCard.value === 1) {
+			playerAces++
 			nextCard.value = 11
 		}
 		playerHand.push(nextCard)
@@ -124,6 +121,7 @@ const GlobalProvider = ({ children }) => {
 
 		nextCard = currentShoe.pop()
 		if (nextCard.value === 1) {
+			dealerAces++
 			nextCard.value = 11
 		}
 		dealerHand.push(nextCard)
@@ -131,6 +129,7 @@ const GlobalProvider = ({ children }) => {
 
 		nextCard = currentShoe.pop()
 		if (nextCard.value === 1) {
+			playerAces++
 			nextCard.value = 11
 		}
 		playerHand.push(nextCard)
@@ -138,6 +137,7 @@ const GlobalProvider = ({ children }) => {
 
 		nextCard = currentShoe.pop()
 		if (nextCard.value === 1) {
+			dealerAces++
 			nextCard.value = 11
 		}
 		dealerHand.push(nextCard)
@@ -152,11 +152,14 @@ const GlobalProvider = ({ children }) => {
 		if (dealerScore === 21) {
 			dealerBlackjack = true
 		}
+
+		// if blackjack is found, send values to handleBlackjack function to end the end and set values in global state
 		if (playerBlackjack || dealerBlackjack) {
 			return handleBlackjack(playerBlackjack, dealerBlackjack, playerHand, dealerHand, currentShoe)
 		}
 		// if no blackjacks, set values to global state, then prompt user options
 		let splitOption = false
+		// if player's first 2 cards are equal value, option to split for player = true
 		if (playerHand[0].value === playerHand[1].value) {
 			splitOption = true
 		}
@@ -168,7 +171,9 @@ const GlobalProvider = ({ children }) => {
 				dealerHand,
 				playerScore,
 				dealerScore,
-				splitOption
+				splitOption,
+				playerAces,
+				dealerAces
 			}
 		})
 	}
@@ -195,6 +200,48 @@ const GlobalProvider = ({ children }) => {
 		}
 	}
 
+	const hit = () => {
+		// get shoe from state, get player's hand
+		const shoe = [...state.shoe]
+		const playerHand = [...state.playerHand]
+		let playerAces = state.playerAces
+		const bet = state.bet
+
+		let nextCard = shoe.pop()
+
+		// if next card is Ace and total hand value is 10 or less, set the Ace to 11
+		if (nextCard.value === 1) {
+			playerAces++
+			if (state.playerScore <= 10) {
+				nextCard.value = 11
+			}
+		}
+		playerHand.push(nextCard)
+		let playerScore = state.playerScore + nextCard.value
+
+		// if player has an ace in hand that was valued at 11 and subsequently goes over 21, we can change the 11 to 1
+		if (playerScore > 21 && playerAces > 0) {
+			playerScore -= 10
+			playerAces--
+		}
+
+		if (playerScore > 21) {
+			displayAlert('Player bust!')
+			dispatch({
+				// end the hand after displaying outcome, dealer wins: set all player options to false, set canPlaceBets to true
+				type: PLAYER_BUST,
+				payload: { shoe, playerHand, playerScore, bet }
+			})
+		}
+		else {
+			dispatch({
+				// update state values; options are kept on screen so user can hit or stay again
+				type: PLAYER_SAFE,
+				payload: { shoe, playerHand, playerScore, playerAces }
+			})
+		}
+	}
+	// if user chooses stay, options are removed from display; dealerMove() is next
 	const stay = () => {
 		dispatch({
 			type: PLAYER_STAY,
@@ -204,49 +251,16 @@ const GlobalProvider = ({ children }) => {
 		}, 1500)
 	}
 
-	const hit = () => {
-
-		const currentShoe = [...state.shoe]
-		const currentHand = [...state.playerHand]
-		let nextCard = currentShoe.pop()
-
-		// if next card is Ace and total hand value is 10 or less, set the Ace to 11
-		if (nextCard.value === 1 && state.playerScore <= 10) {
-			nextCard.value = 11
-		}
-
-		currentHand.push(nextCard)
-		const newPlayerScore = state.playerScore + nextCard.value
-
-		if (newPlayerScore > 21) {
-			displayAlert('Player bust!')
-			dispatch({
-				type: PLAYER_BUST,
-				payload: { shoe: currentShoe, playerHand: currentHand, playerScore: newPlayerScore }
-			})
-		}
-		else {
-			dispatch({
-				type: PLAYER_SAFE,
-				payload: { shoe: currentShoe, playerHand: currentHand, playerScore: newPlayerScore }
-			})
-		}
-	}
-
 	const insurance = () => {
 		console.log('insurance');
 	}
-	const split = () => {
-		console.log('split');
-	}
+	const double = () => {
+		let bet = state.bet * 2
+		const shoe = [...state.shoe]  // set temp shoe in order to update global state after deal
+		const playerHand = [...state.playerHand]  // temp hands for player and dealer that we put in state after deal
+		let playerScore = state.playerScore
 
-	const double = async () => {
-
-		const currentShoe = [...state.shoe]  // set temp shoe in order to update global state after deal
-		const playerHand = [...state.player.hand]  // temp hands for player and dealer that we put in state after deal
-		let playerScore = state.player.score
-
-		let nextCard = currentShoe.pop()
+		let nextCard = shoe.pop()
 
 		if (nextCard.value === 1 && playerScore <= 10) {
 			nextCard.value = 11
@@ -255,15 +269,15 @@ const GlobalProvider = ({ children }) => {
 		playerHand.push(nextCard)
 		if (playerScore > 21) {
 			displayAlert('Player Bust! Try again!')
-			await dispatch({
+			dispatch({
 				type: PLAYER_BUST,
-				payload: { currentShoe, playerHand, playerScore }
+				payload: { shoe, playerHand, playerScore, bet }
 			})
 		}
 		else {
-			await dispatch({
+			dispatch({
 				type: PLAYER_DOUBLE,
-				payload: { currentShoe, playerHand, playerScore }
+				payload: { shoe, playerHand, playerScore, bet }
 			})
 		}
 		setTimeout(() => {
@@ -272,36 +286,38 @@ const GlobalProvider = ({ children }) => {
 	}
 
 
-
-
-
-
 	const dealerMove = () => {
-		const currentShoe = [...state.shoe]  // set temp shoe in order to update global state after deal
+		const shoe = [...state.shoe]  // set temp shoe in order to update global state after deal
 		const dealerHand = [...state.dealerHand]  // temp hands for dealer that we put in state
 		let dealerScore = state.dealerScore
+		let dealerAces = state.dealerAces
 
 		while (dealerScore <= 16) {
-			let nextCard = currentShoe.pop()
+			let nextCard = shoe.pop()
 
 			// if next card is Ace and total hand value is 10 or less, set the Ace to 11
 			if (nextCard.value === 1 && dealerScore <= 10) {
+				dealerAces++
 				nextCard.value = 11
 			}
 			dealerScore += nextCard.value
 			dealerHand.push(nextCard)
 
+			if (dealerScore > 21 && dealerAces > 0) {
+				dealerScore -= 10
+				dealerAces--
+			}
 			if (dealerScore > 21) {
 				displayAlert('Dealer bust!')
 				dispatch({
 					type: DEALER_BUST,
-					payload: { shoe: currentShoe, dealerHand }
+					payload: { shoe, dealerHand, dealerScore }
 				})
 			}
 			else {
 				dispatch({
 					type: DEALER_SAFE,
-					payload: { shoe: currentShoe, dealerHand, dealerScore }
+					payload: { shoe, dealerHand, dealerScore, dealerAces }
 				})
 			}
 		}
@@ -356,7 +372,6 @@ const GlobalProvider = ({ children }) => {
 				hit,
 				stay,
 				double,
-				split
 
 
 			}

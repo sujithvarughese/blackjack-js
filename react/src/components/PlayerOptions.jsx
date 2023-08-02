@@ -1,5 +1,4 @@
 import { useGlobalContext } from "../context/GlobalContext.jsx";
-import { PLAYER_BUST, PLAYER_HIT } from "../context/actions.js";
 
 const PlayerOptions = () => {
 

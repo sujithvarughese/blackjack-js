@@ -17,7 +17,7 @@ import {
 	PLAYER_STAY,
 	PLAYER_SPLIT,
 	DEALER_BUST,
-	DEALER_HIT
+	DEALER_HIT,
 	DEALER_SAFE,
 	PLAYER_WIN,
 	DEALER_WIN,
@@ -88,6 +88,8 @@ const Reducer = (state, action) => {
 			playerScore: action.payload.playerScore,
 			dealerScore: action.payload.dealerScore,
 			splitOption: action.payload.splitOption,
+			playerAces: action.payload.playerAces,
+			dealerAces: action.payload.dealerAces,
 			showMenu: false,
 			handInProgress: true,
 			playerOptions: true,
@@ -141,8 +143,6 @@ const Reducer = (state, action) => {
 		}
 	}
 
-
-
 	if (action.type === PLAYER_BUST) {
 		return {
 			...state,
@@ -164,6 +164,7 @@ const Reducer = (state, action) => {
 			shoe: action.payload.shoe,
 			playerHand: action.payload.playerHand,
 			playerScore: action.payload.playerScore,
+			playerAces: action.payload.playerAces
 
 		}
 	}
@@ -182,6 +183,7 @@ const Reducer = (state, action) => {
 	if (action.type === PLAYER_DOUBLE) {
 		return {
 			...state,
+			bet: action.payload.bet,
 			playerOptions: false,
 			splitOption: false,
 			doubleOption: false,
@@ -195,7 +197,8 @@ const Reducer = (state, action) => {
 			...state,
 			shoe: action.payload.shoe,
 			dealerHand: action.payload.dealerHand,
-			playerBankroll: state.playerBankroll + state.bet + state.bet,
+			dealerScore: action.payload.dealerScore,
+			playerBankroll: state.playerBankroll + state.bet,
 			canPlaceBets: true,
 			playerOptions: true,
 		}
@@ -209,6 +212,7 @@ const Reducer = (state, action) => {
 			shoe: action.payload.shoe,
 			dealerHand: action.payload.dealerHand,
 			dealerScore: action.payload.dealerScore,
+			dealerAces: action.payload.dealerAces
 
 		}
 	}

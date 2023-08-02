@@ -1,5 +1,4 @@
 import { useGlobalContext } from "../context/GlobalContext.jsx";
-import { useState } from "react";
 
 const PlaceBets = () => {
 
