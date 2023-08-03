@@ -29,7 +29,7 @@ const Menu = () => {
 
 	return (
 
-			<form className="form w-80 mx-auto" onSubmit={handleSubmit}>
+			<form className="form w-1/4 mx-auto" onSubmit={handleSubmit}>
 
 				<p className="form-title">Main Menu</p>
 

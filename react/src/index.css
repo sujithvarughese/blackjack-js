@@ -148,17 +148,19 @@
     left: 0;
     right: 0;
     justify-content: center;
+    align-items: center;
     z-index: 20;
-    top: 58px;
+    top: 60px;
     height: 92px;
     display: flex;
 }
 
 .alert-text {
     font-size: 3rem;
-    background-color: #829ab1;
+    background-color: darkred;
     border-radius: 0.75rem;
-    color: darkred;
+    color: white;
+    padding: 20px;
 }
 
 
