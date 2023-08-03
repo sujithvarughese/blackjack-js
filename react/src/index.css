@@ -23,8 +23,11 @@
     z-index: 10;
 }
 .card-img {
-   width: 160px;
+    width: 160px;
     height: auto;
+}
+.doubled {
+    transform: rotate(90deg)
 }
 .dealer {
     top: 6px
@@ -43,7 +46,7 @@
     top: 45%
 }
 .bets {
-    top: 15%
+    top: 14%;
 }
 .menu {
     position: absolute;

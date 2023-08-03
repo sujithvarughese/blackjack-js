@@ -2,11 +2,11 @@ import { useGlobalContext } from "../context/GlobalContext.jsx";
 
 const Alert = () => {
 
-	const { alert } = useGlobalContext()
+	const { alertText } = useGlobalContext()
 
 	return (
 		<div className="alert-text">
-			{alert}
+			{alertText}
 		</div>
 	);
 };

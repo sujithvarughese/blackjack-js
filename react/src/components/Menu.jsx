@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useGlobalContext } from "../context/GlobalContext.jsx";
-import deck from "../deck.js";
+import { createShoe } from "../deck.js";
 
 //if user doesnt change values, default to initialState
 const initialState = {
@@ -19,28 +19,13 @@ const Menu = () => {
 		setValues({...values, [e.target.name]: e.target.value})
 	}
 
-	// send values to set in global state
+	// - send values createShoe() in deck.js to return shoe
+	// - send new shoe and bankroll selected by user to setupGame() which sets global state
 	const handleSubmit = async (e) => {
 		e.preventDefault()
-		createShoe(values.numDecks)
-
+		const newShoe = createShoe(values.numDecks)
+		setupGame(newShoe, values.playerBankroll)
 	}
-	// create shoe function creates shoe and sends to reducer to set in global state
-	const createShoe = (numDecks = 1) => {
-		// temp shoe array
-		const shoe = []
-		for (let i = 0; i < numDecks; i++) {
-			// push full deck array to newShoe array
-			shoe.push(...deck)
-			// shuffle
-			shoe.sort(() => Math.random() - 0.5)
-		}
-		// shuffle again once all decks added
-		shoe.sort(() => Math.random() - 0.5)
-		setupGame(shoe, values.playerBankroll)
-	}
-
-
 
 	return (
 
@@ -65,7 +50,7 @@ const Menu = () => {
 						type="number"
 						name="playerBankroll"
 						value={values.playerBankroll}
-						min="100" max="10000"
+						min={100} max={1000000000}
 						onChange={handleChange}
 					/>
 				</div>

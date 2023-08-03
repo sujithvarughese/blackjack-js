@@ -1,45 +1,64 @@
 import { useGlobalContext } from "../context/GlobalContext.jsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import AddFunds from "./AddFunds.jsx";
 
 const PlaceBets = () => {
 
-	const { bet, placeBet } = useGlobalContext()
+	const { bet, placeBet, playerBankroll } = useGlobalContext()
 
+	// local state for user input
 	const [userBet, setUserBet] = useState(bet)
 
+	const [showAddFunds, setShowAddFunds] = useState(false)
 
 	const handleChange = (e) => {
 		setUserBet(e.target.value)
 	}
 
-	// initial bet (global function) places the initial wager into global state, then deals the initial deal (also sets hands and values to global state)
+	// placeBet sets bet in global state, then triggers to deal cards
 	const handleSubmit = (e) => {
 		e.preventDefault()
 		placeBet(userBet)
 	}
 
+	useEffect(() => {
+		if (playerBankroll < 1) {
+			setShowAddFunds(true)
+		}
+	}, [])
+
 	return (
 		<div>
-			<form className="form w-88 m-32 border-4 border-red-700 flex flex-col justify-center" onSubmit={handleSubmit}>
+			{
+				showAddFunds ?
 
-				<label
-					className='form-label p-4 text-2xl'
-					htmlFor="betAmount"
-				>Place Bet!
-				</label>
+					<AddFunds setShowAddFunds={setShowAddFunds} />
+					:
+					<form className="form w-88 h-56 m-36 border-4 border-red-700 flex flex-col justify-center"
+					      onSubmit={handleSubmit}>
 
-				<input
-					className="bg-color-grey shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-					type="number"
-					name="bet"
-					min="25" max='1000'
-					value={userBet}
-					onChange={handleChange}/>
+						<label
+							className='form-label p-4 text-2xl'
+							htmlFor="betAmount"
+						>Place Bet!
+						</label>
 
-				<button className="btn" type="submit">Deal!
-				</button>
+						<input
+							className="form-input"
+							type="number"
+							name="bet"
+							min="1" max={playerBankroll}
+							value={userBet}
+							onChange={handleChange} />
 
-			</form>
+						<div className="flex gap-4">
+							<button className="btn" type="submit">Deal!</button>
+							<button className="btn" type="button" onClick={()=>setShowAddFunds(true)}>Add Funds</button>
+						</div>
+
+
+					</form>
+			}
 		</div>
 	);
 };

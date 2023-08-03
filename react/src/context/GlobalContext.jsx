@@ -7,6 +7,7 @@ import {
 	HIDE_WELCOME,
 
 	SETUP_GAME,
+	ADD_FUNDS,
 	PLACE_BETS,
 	SET_INITIAL_DEAL,
 
@@ -17,48 +18,51 @@ import {
 	PLAYER_BUST,
 	PLAYER_SAFE,
 	PLAYER_STAY,
-	PLAYER_SPLIT,
 	PLAYER_DOUBLE,
 	DEALER_BUST,
 	DEALER_SAFE,
-	DEALER_HIT,
-	DEALER_STAY,
 	PLAYER_WIN,
 	DEALER_WIN,
 	PUSH,
 } from './actions.js'
 
 const initialState = {
-	shoe: {},
-	playerBankroll: 0,
-	bet: 25,
-	playerHand: [],
-	playerAces: 0,
-	playerBlackjack: false,
-	playerScore: 0,
-	dealerHand: [],
-	dealerBlackjack: false,
-	dealerAces: 0,
-	dealerScore: 0,
-	isLoading: false,
-	handInProgress: false,
-	showWelcome: true,
-	showMenu: false,
 	alert: '',
 	showAlert: false,
+
+	shoe: {},
+	playerBankroll: 500,
+	bet: 25,
+
+	playerHand: [],
+	playerScore: 0,
+	playerBlackjack: false,
+	playerAce11: false,
+
+	dealerHand: [],
+	dealerScore: 0,
+	dealerBlackjack: false,
+	dealerAce11: false,
+
+	isLoading: false,
+
+	showWelcome: true,
+	showMenu: false,
+	showAddFunds: false,
 	canPlaceBets: false,
+
+	handInProgress: false,
+	dealerCardShown: false,
 
 	playerOptions: false,
 	insuranceOption: false,
 	splitOption: false,
 	doubleOption: false,
 	hitOption: false,
-	stayOption: false,
-
 	newDealOption: false,
+
 	doubledHand: false,
 	splitHand: false,
-	dealerCardShown: false
 }
 
 const GlobalContext = createContext()
@@ -68,12 +72,12 @@ const GlobalProvider = ({ children }) => {
 
 	const [state, dispatch] = useReducer(reducer, initialState)
 
-	const displayAlert = (alertText, ms = 1500) => {
+	const displayAlert = (alertText) => {
 		dispatch({
 			type: DISPLAY_ALERT,
 			payload: { alertText }
 		})
-		clearAlert(ms)
+		//clearAlert()
 	}
 
 	const clearAlert = (ms) => {
@@ -87,7 +91,7 @@ const GlobalProvider = ({ children }) => {
 		dispatch({ type: HIDE_WELCOME })
 	}
 
-	// after user chooses numDecks and bankroll, create shoe of cards, set shoe and bankroll to global state
+	// set shoe and bankroll to global state
 	const setupGame = (shoe, playerBankroll) => {
 		dispatch({
 			type: SETUP_GAME,
@@ -95,6 +99,14 @@ const GlobalProvider = ({ children }) => {
 
 		})
 	}
+
+	const addFunds = (reloadAmount) => {
+		dispatch({
+			type: ADD_FUNDS,
+			payload: { reloadAmount }
+		})
+	}
+
 	// user places initial bet, set to state, then cards are dealt
 	const placeBet = (bet) => {
 		dispatch({
@@ -105,39 +117,40 @@ const GlobalProvider = ({ children }) => {
 	}
 
 	const setInitialDeal = () => {
-		const currentShoe = [...state.shoe]
+		const shoe = [...state.shoe]
+		console.log(shoe);
 		const playerHand = []  // temp hands for player and dealer that we put in state after deal
 		const dealerHand = []
-		let playerAces = state.playerAces
-		let dealerAces = state.dealerAces
-		//----deal out cards, if Ace is dealt, change value from 1 to 11---//
-		let nextCard = currentShoe.pop()
+		let playerAce11 = false // number of aces in hand worth 11 (which still can be reduced to 1)
+		let dealerAce11 = false
+		// deal cards, if Ace is dealt, change value from 1 to 11
+		let nextCard = shoe.pop()
 		if (nextCard.value === 1) {
-			playerAces++
+			playerAce11 = true
 			nextCard.value = 11
 		}
 		playerHand.push(nextCard)
 		let playerScore = nextCard.value
 
-		nextCard = currentShoe.pop()
+		nextCard = shoe.pop()
 		if (nextCard.value === 1) {
-			dealerAces++
+			dealerAce11= true
 			nextCard.value = 11
 		}
 		dealerHand.push(nextCard)
 		let dealerScore = nextCard.value
 
-		nextCard = currentShoe.pop()
+		nextCard = shoe.pop()
 		if (nextCard.value === 1) {
-			playerAces++
+			playerAce11 = true
 			nextCard.value = 11
 		}
 		playerHand.push(nextCard)
 		playerScore += nextCard.value
 
-		nextCard = currentShoe.pop()
+		nextCard = shoe.pop()
 		if (nextCard.value === 1) {
-			dealerAces++
+			dealerAce11= true
 			nextCard.value = 11
 		}
 		dealerHand.push(nextCard)
@@ -153,9 +166,11 @@ const GlobalProvider = ({ children }) => {
 			dealerBlackjack = true
 		}
 
-		// if blackjack is found, send values to handleBlackjack function to end the end and set values in global state
+		// if blackjack is found, send values to handleBlackjack function to end hand and set values in global state
 		if (playerBlackjack || dealerBlackjack) {
-			return handleBlackjack(playerBlackjack, dealerBlackjack, playerHand, dealerHand, currentShoe)
+			setTimeout(() => {
+				return handleBlackjack(playerBlackjack, dealerBlackjack, playerHand, dealerHand, shoe)
+			}, 1000)
 		}
 		// if no blackjacks, set values to global state, then prompt user options
 		let splitOption = false
@@ -166,63 +181,67 @@ const GlobalProvider = ({ children }) => {
 		dispatch({
 			type: SET_INITIAL_DEAL,
 			payload: {
-				shoe: currentShoe,
+				shoe,
 				playerHand,
 				dealerHand,
 				playerScore,
 				dealerScore,
 				splitOption,
-				playerAces,
-				dealerAces
+				playerAce11,
+				dealerAce11
 			}
 		})
 	}
 
-	const handleBlackjack = (playerBlackjack, dealerBlackjack, playerHand, dealerHand, currentShoe) => {
+	// from setInitialDeal() if any blackjacks are found (hands not yet set in state)
+	const handleBlackjack = (playerBlackjack, dealerBlackjack, playerHand, dealerHand, shoe) => {
 		if (playerBlackjack && dealerBlackjack) {
 			displayAlert('Player and dealer blackjack. Push!')
 			dispatch({
 				type: HANDLE_BOTH_BLACKJACK,
-				payload: { playerHand, dealerHand, shoe: currentShoe }
+				payload: { playerHand, dealerHand, shoe }
 			})
 		} else if (playerBlackjack) {
 			displayAlert('Congratulations! You have blackjack!')
 			dispatch({
 				type: HANDLE_PLAYER_BLACKJACK,
-				payload: { playerHand, dealerHand, shoe: currentShoe  }
+				payload: { playerHand, dealerHand, shoe }
 			})
 		} else {
 			displayAlert('Dealer has blackjack!')
 			dispatch({
 				type: HANDLE_DEALER_BLACKJACK,
-				payload: { playerHand, dealerHand, shoe: currentShoe  }
+				payload: { playerHand, dealerHand, shoe }
 			})
 		}
 	}
 
+
 	const hit = () => {
-		// get shoe from state, get player's hand
+		// get info from state and create local variables
 		const shoe = [...state.shoe]
 		const playerHand = [...state.playerHand]
-		let playerAces = state.playerAces
+		let playerAce11 = state.playerAce11
+		let playerScore = state.playerScore
+		const playerBankroll = state.bankroll
+		const doubledHand = false
 		const bet = state.bet
 
 		let nextCard = shoe.pop()
 
-		// if next card is Ace and total hand value is 10 or less, set the Ace to 11
-		if (nextCard.value === 1) {
-			playerAces++
-			if (state.playerScore <= 10) {
-				nextCard.value = 11
-			}
+		// if next card is Ace and total hand value is 10 or less, set the Ace value to 11
+		if (nextCard.value === 1 && playerScore <= 10) {
+			nextCard.value = 11
+			playerAce11 = true
 		}
-		playerHand.push(nextCard)
-		let playerScore = state.playerScore + nextCard.value
 
-		// if player has an ace in hand that was valued at 11 and subsequently goes over 21, we can change the 11 to 1
-		if (playerScore > 21 && playerAces > 0) {
+		playerScore += nextCard.value
+		playerHand.push(nextCard)
+
+		// if player has an ace in hand that is valued at 11 and score subsequently goes over 21, we can change the 11 to 1
+		if (playerScore > 21 && playerAce11) {
 			playerScore -= 10
-			playerAces--
+			playerAce11 = false
 		}
 
 		if (playerScore > 21) {
@@ -230,14 +249,14 @@ const GlobalProvider = ({ children }) => {
 			dispatch({
 				// end the hand after displaying outcome, dealer wins: set all player options to false, set canPlaceBets to true
 				type: PLAYER_BUST,
-				payload: { shoe, playerHand, playerScore, bet }
+				payload: { shoe, playerHand, playerScore, playerBankroll, bet, doubledHand }
 			})
 		}
 		else {
 			dispatch({
 				// update state values; options are kept on screen so user can hit or stay again
 				type: PLAYER_SAFE,
-				payload: { shoe, playerHand, playerScore, playerAces }
+				payload: { shoe, playerHand, playerScore, playerAce11 }
 			})
 		}
 	}
@@ -248,41 +267,52 @@ const GlobalProvider = ({ children }) => {
 		})
 		setTimeout(() => {
 			dealerMove()
-		}, 1500)
+		}, 1000)
 	}
 
-	const insurance = () => {
-		console.log('insurance');
-	}
+
 	const double = () => {
+		displayAlert('Double Down!')
 		let bet = state.bet * 2
+		let playerBankroll = state.playerBankroll - state.bet
+		const doubledHand = true
+		let playerAce11 = state.playerAce11
 		const shoe = [...state.shoe]  // set temp shoe in order to update global state after deal
 		const playerHand = [...state.playerHand]  // temp hands for player and dealer that we put in state after deal
 		let playerScore = state.playerScore
 
 		let nextCard = shoe.pop()
 
+		// if player draws an Ace
 		if (nextCard.value === 1 && playerScore <= 10) {
 			nextCard.value = 11
 		}
+
 		playerScore += nextCard.value
 		playerHand.push(nextCard)
+
+		// if player has an Ace in the starting two cards, and draws card that would cause bust
+		if (playerScore > 21 && playerAce11) {
+			playerScore -= 10
+		}
+
 		if (playerScore > 21) {
 			displayAlert('Player Bust! Try again!')
 			dispatch({
 				type: PLAYER_BUST,
-				payload: { shoe, playerHand, playerScore, bet }
+				payload: { shoe, playerHand, playerScore, playerBankroll, bet, doubledHand }
 			})
 		}
 		else {
 			dispatch({
 				type: PLAYER_DOUBLE,
-				payload: { shoe, playerHand, playerScore, bet }
+				payload: { shoe, playerHand, playerScore, playerBankroll, bet }
 			})
 		}
+		// player has no additional options, trigger dealerMove
 		setTimeout(() => {
 			dealerMove()
-		}, 1500)
+		}, 1000)
 	}
 
 
@@ -290,22 +320,24 @@ const GlobalProvider = ({ children }) => {
 		const shoe = [...state.shoe]  // set temp shoe in order to update global state after deal
 		const dealerHand = [...state.dealerHand]  // temp hands for dealer that we put in state
 		let dealerScore = state.dealerScore
-		let dealerAces = state.dealerAces
+		let dealerAce11 = state.dealerAce11
 
+		// dealer action, set in state, and loop until dealer bust or makes a hand 17 or higher
 		while (dealerScore <= 16) {
 			let nextCard = shoe.pop()
 
 			// if next card is Ace and total hand value is 10 or less, set the Ace to 11
 			if (nextCard.value === 1 && dealerScore <= 10) {
-				dealerAces++
 				nextCard.value = 11
+				dealerAce11 = false
 			}
 			dealerScore += nextCard.value
 			dealerHand.push(nextCard)
 
-			if (dealerScore > 21 && dealerAces > 0) {
+			// if dealer has an ace in hand that is valued at 11 and score subsequently goes over 21, we can change the 11 to 1
+			if (dealerScore > 21 && dealerAce11) {
 				dealerScore -= 10
-				dealerAces--
+				dealerAce11 = false
 			}
 			if (dealerScore > 21) {
 				displayAlert('Dealer bust!')
@@ -317,44 +349,38 @@ const GlobalProvider = ({ children }) => {
 			else {
 				dispatch({
 					type: DEALER_SAFE,
-					payload: { shoe, dealerHand, dealerScore, dealerAces }
+					payload: { shoe, dealerHand, dealerScore, dealerAce11 }
 				})
 			}
 		}
-		if (dealerScore <= 21) {
-			determineWinner()
+		setTimeout(() => {
+			if (dealerScore <= 21) {
+				determineWinner(dealerScore)
+			}
+		}, 1000)
+
+	}
+
+	// only runs if showdown occurs (pass dealerScore since function can run before state is updated)
+	const determineWinner = (dealerScore) => {
+		if (state.playerScore > dealerScore) {
+			displayAlert('Player win!')
+			dispatch({
+				type: PLAYER_WIN,
+			})
 		}
-	}
-
-	const determineWinner = () => {
-
-		if (state.playerScore <= 21 && state.dealerScore <= 21) {
-			if (state.playerScore > state.dealerScore) {
-				displayAlert('Player win!', 10000)
-				dispatch({
-					type: PLAYER_WIN,
-				})
-			}
-			else if (state.dealerScore > state.playerScore) {
-				displayAlert('Dealer Win. You Lose!', 10000)
-				dispatch({
-					type: DEALER_WIN,
-				})
-			}
-			else {
-				displayAlert("Push!", 10000)
-				dispatch({
-					type: PUSH,
-				})
-			}
+		else if (dealerScore > state.playerScore) {
+			displayAlert('Dealer Win. You Lose!')
+			dispatch({
+				type: DEALER_WIN,
+			})
 		}
-	}
-
-	const newDeal = () => {
-		console.log('newDeal');
-	}
-
-	const clearHands = () => {
+		else {
+			displayAlert("Push!")
+			dispatch({
+				type: PUSH,
+			})
+		}
 
 	}
 
@@ -366,9 +392,9 @@ const GlobalProvider = ({ children }) => {
 				displayAlert,
 				hideWelcome,
 				setupGame,
+				addFunds,
 				placeBet,
 				handleBlackjack,
-				newDeal,
 				hit,
 				stay,
 				double,

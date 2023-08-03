@@ -3,6 +3,7 @@ export const CLEAR_ALERT = 'CLEAR_ALERT'
 export const HIDE_WELCOME = 'HIDE_WELCOME'
 
 export const SETUP_GAME = 'SETUP_GAME'
+export const ADD_FUNDS = 'ADD_FUNDS'
 export const PLACE_BETS = 'PLACE_BETS'
 export const SET_INITIAL_DEAL = 'SET_INITIAL_DEAL'
 
@@ -15,17 +16,11 @@ export const PLAYER_BUST = 'PLAYER_BUST'
 export const PLAYER_SAFE = 'PLAYER_SAFE'
 
 export const PLAYER_STAY = 'PLAYER_STAY'
-export const PLAYER_SPLIT = 'PLAYER_SPLIT'
 export const PLAYER_DOUBLE = 'PLAYER_DOUBLE'
 
 export const DEALER_BUST = 'DEALER_BUST'
-export const DEALER_HIT = 'DEALER_HIT'
 export const DEALER_SAFE = 'DEALER_SAFE'
-export const DEALER_STAY = 'DEALER_STAY'
 
 export const PLAYER_WIN = 'PLAYER_WIN'
 export const DEALER_WIN = 'DEALER_WIN'
 export const PUSH = 'PUSH'
-
-
-export const CLEAR_HANDS = 'CLEAR_HANDS'

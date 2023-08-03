@@ -53,4 +53,19 @@ const deck = [
     { rank: 'King', suit: 'spades', value: 10, img: '/spades_king.svg' }
 ]
 
-export default deck
+// create shoe function creates and returns shoe
+const createShoe = (numDecks = 1) => {
+    // temp shoe array
+    const shoe = []
+    for (let i = 0; i < numDecks; i++) {
+        // push full deck array to newShoe array
+        shoe.push(...deck)
+        // shuffle
+        shoe.sort(() => Math.random() - 0.5)
+    }
+    // shuffle again once all decks added
+    shoe.sort(() => Math.random() - 0.5)
+    return shoe
+}
+
+export { createShoe, deck }

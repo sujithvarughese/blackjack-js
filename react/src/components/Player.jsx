@@ -1,17 +1,21 @@
 import { useGlobalContext } from "../context/GlobalContext.jsx";
 
 const Player = () => {
-  const { bankroll, playerScore, playerHand, bet, shoe } = useGlobalContext();
+  const { playerHand, doubledHand } = useGlobalContext();
 
 
   return (
     <>
-        {playerHand.map((card, index) => {
-          return <img key={card.img} className="card-img border-2 border-orange-500" src={card.img} alt={card.value}/>
-        })}
-
+        {
+           playerHand.map((card, index) =>
+           (index === 2 && doubledHand)
+                 ?
+              <img key={card.img} className="card-img doubled" src={card.img} alt={card.value} />
+                 :
+              <img key={card.img} className="card-img" src={card.img} alt={card.value} />
+           )
+        }
      </>
-
   );
 };
 
