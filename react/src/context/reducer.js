@@ -108,6 +108,7 @@ const Reducer = (state, action) => {
 			dealerScore: action.payload.dealerScore,
 			playerAce11: action.payload.playerAce11,
 			dealerAce11: action.payload.dealerAce11,
+			dealerFaceUp: action.payload.dealerFaceUp,
 			doubleOption: true,
 			hitOption: true,
 			playerOptions: true

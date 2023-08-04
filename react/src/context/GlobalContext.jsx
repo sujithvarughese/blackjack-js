@@ -26,6 +26,7 @@ import {
 	DEALER_WIN,
 	PUSH,
 } from './actions.js'
+import simulation from "../components/Simulation.jsx";
 
 const initialState = {
 	alert: '',
@@ -64,6 +65,10 @@ const initialState = {
 
 	doubledHand: false,
 	splitHand: false,
+
+	simulationMode: false,
+	showSimulationMenu: false,
+	dealerFaceUp: 0
 }
 
 const GlobalContext = createContext()
@@ -124,9 +129,8 @@ const GlobalProvider = ({ children }) => {
 		setInitialDeal()
 	}
 
-	const setInitialDeal = () => {
+	const setInitialDeal = (simShoe) => {
 		const shoe = [...state.shoe]
-		console.log(shoe);
 		const playerHand = []  // temp hands for player and dealer that we put in state after deal
 		const dealerHand = []
 		let playerAce11 = false // number of aces in hand worth 11 (which still can be reduced to 1)
@@ -147,6 +151,7 @@ const GlobalProvider = ({ children }) => {
 		}
 		dealerHand.push(nextCard)
 		let dealerScore = nextCard.value
+		let dealerFaceUp = dealerScore
 
 		nextCard = shoe.pop()
 		if (nextCard.value === 1) {
@@ -174,6 +179,7 @@ const GlobalProvider = ({ children }) => {
 			dealerBlackjack = true
 		}
 
+
 		// if blackjack is found, send values to handleBlackjack function to end hand and set values in global state
 		if (playerBlackjack || dealerBlackjack) {
 			setTimeout(() => {
@@ -196,7 +202,8 @@ const GlobalProvider = ({ children }) => {
 				dealerScore,
 				splitOption,
 				playerAce11,
-				dealerAce11
+				dealerAce11,
+				dealerFaceUp
 			}
 		})
 	}
