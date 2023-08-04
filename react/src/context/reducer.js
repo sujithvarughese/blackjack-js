@@ -3,6 +3,7 @@ import {
 	CLEAR_ALERT,
 	HIDE_WELCOME,
 	SETUP_GAME,
+	SET_SHOW_MENU,
 	ADD_FUNDS,
 	PLACE_BETS,
 	SET_INITIAL_DEAL,
@@ -49,6 +50,16 @@ const Reducer = (state, action) => {
 			showMenu: true
 		}
 	}
+
+	if (action.type === SET_SHOW_MENU) {
+		return {
+			...state,
+			showMenu: action.payload.mainMenu,
+			canPlaceBets: false,
+			handInProgress: false
+		}
+	}
+
 	// bankroll and shoe set into global state
 	if (action.type === SETUP_GAME) {
 		return {
@@ -63,7 +74,7 @@ const Reducer = (state, action) => {
 	if (action.type === ADD_FUNDS) {
 		return {
 			...state,
-			playerBankroll: state.playerBankroll + action.payload.reloadAmount
+			playerBankroll: Number(state.playerBankroll) + Number(action.payload.reloadAmount)
 		}
 	}
 

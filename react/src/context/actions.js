@@ -3,6 +3,7 @@ export const CLEAR_ALERT = 'CLEAR_ALERT'
 export const HIDE_WELCOME = 'HIDE_WELCOME'
 
 export const SETUP_GAME = 'SETUP_GAME'
+export const SET_SHOW_MENU = 'SET_SHOW_MENU'
 export const ADD_FUNDS = 'ADD_FUNDS'
 export const PLACE_BETS = 'PLACE_BETS'
 export const SET_INITIAL_DEAL = 'SET_INITIAL_DEAL'

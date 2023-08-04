@@ -1,16 +1,19 @@
 import { useGlobalContext } from "../context/GlobalContext.jsx";
 import { useEffect, useState } from "react";
 import AddFunds from "./AddFunds.jsx";
+import Menu from "./Menu.jsx";
 
 const PlaceBets = () => {
 
-	const { bet, placeBet, playerBankroll } = useGlobalContext()
+	const { bet, placeBet, playerBankroll, shoe, displayAlert, setShowMenu, showMenu } = useGlobalContext()
 
 	// local state for user input
 	const [userBet, setUserBet] = useState(bet)
 
 	const [showAddFunds, setShowAddFunds] = useState(false)
 
+	const min = 1
+	const max = 9999999999
 	const handleChange = (e) => {
 		setUserBet(e.target.value)
 	}
@@ -18,12 +21,17 @@ const PlaceBets = () => {
 	// placeBet sets bet in global state, then triggers to deal cards
 	const handleSubmit = (e) => {
 		e.preventDefault()
-		placeBet(userBet)
+		if (playerBankroll < userBet) {
+			setShowAddFunds(true)
+		} else {
+			placeBet(userBet)
+		}
 	}
 
 	useEffect(() => {
-		if (playerBankroll < 1) {
-			setShowAddFunds(true)
+		if (shoe.length < 12) {
+			displayAlert("Please use new shoe")
+			setShowMenu(true)
 		}
 	}, [])
 
@@ -47,7 +55,7 @@ const PlaceBets = () => {
 							className="form-input"
 							type="number"
 							name="bet"
-							min="1" max={playerBankroll}
+							min={min} max={max}
 							value={userBet}
 							onChange={handleChange} />
 

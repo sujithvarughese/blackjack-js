@@ -27,7 +27,7 @@ const AddFunds = ({ setShowAddFunds }) => {
 				type="number"
 				name="funds"
 				value={reloadAmount}
-				min={100} max={1000000000}
+				min='100' max='1000000000'
 				onChange={handleChange}
 			/>
 			<div className="flex gap-4">

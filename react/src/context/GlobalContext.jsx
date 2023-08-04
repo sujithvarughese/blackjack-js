@@ -7,6 +7,7 @@ import {
 	HIDE_WELCOME,
 
 	SETUP_GAME,
+	SET_SHOW_MENU,
 	ADD_FUNDS,
 	PLACE_BETS,
 	SET_INITIAL_DEAL,
@@ -89,6 +90,13 @@ const GlobalProvider = ({ children }) => {
 	// hide startup screen -> take user to main menu
 	const hideWelcome = () => {
 		dispatch({ type: HIDE_WELCOME })
+	}
+
+	const setShowMenu = (mainMenu) => {
+		dispatch({
+			type: SET_SHOW_MENU,
+			payload: { mainMenu }
+		})
 	}
 
 	// set shoe and bankroll to global state
@@ -223,7 +231,7 @@ const GlobalProvider = ({ children }) => {
 		const playerHand = [...state.playerHand]
 		let playerAce11 = state.playerAce11
 		let playerScore = state.playerScore
-		const playerBankroll = state.bankroll
+		const playerBankroll = state.playerBankroll
 		const doubledHand = false
 		const bet = state.bet
 
@@ -392,6 +400,7 @@ const GlobalProvider = ({ children }) => {
 				displayAlert,
 				hideWelcome,
 				setupGame,
+				setShowMenu,
 				addFunds,
 				placeBet,
 				handleBlackjack,
