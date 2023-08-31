@@ -11,7 +11,7 @@ import {
 	ADD_FUNDS,
 	PLACE_BETS,
 	SET_INITIAL_DEAL,
-
+	SHOW_ASSIST,
 	HANDLE_BOTH_BLACKJACK,
 	HANDLE_PLAYER_BLACKJACK,
 	HANDLE_DEALER_BLACKJACK,
@@ -62,6 +62,8 @@ const initialState = {
 	doubleOption: false,
 	hitOption: false,
 	newDealOption: false,
+	assistOption: false,
+	showAssist: false,
 
 	doubledHand: false,
 	splitHand: false,
@@ -329,7 +331,11 @@ const GlobalProvider = ({ children }) => {
 			dealerMove()
 		}, 1000)
 	}
-
+	const showAssist = () => {
+		dispatch({
+			type: SHOW_ASSIST
+		})
+	}
 
 	const dealerMove = () => {
 		const shoe = [...state.shoe]  // set temp shoe in order to update global state after deal
@@ -408,6 +414,7 @@ const GlobalProvider = ({ children }) => {
 				hideWelcome,
 				setupGame,
 				setShowMenu,
+				showAssist,
 				addFunds,
 				placeBet,
 				handleBlackjack,

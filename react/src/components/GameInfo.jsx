@@ -5,14 +5,14 @@ const GameInfo = () => {
 	const { playerBankroll, bet, playerScore, dealerScore, dealerCardShown } = useGlobalContext()
 
 	return (
-		<div className="flex justify-between">
-			<div className="info">Bankroll: {playerBankroll}</div>
-			<div className="info">Current Bet: {bet}</div>
+		<div className="flex flex-col justify-between relative">
+			<div className="absolute top-80">Bankroll: {playerBankroll}</div>
+			<div className="">Current Bet: {bet}</div>
 			{
 				dealerCardShown &&
-				<div className="info">Dealer Score: {dealerScore}</div>
+				<div className="">Dealer Score: {dealerScore}</div>
 			}
-			<div className="info">Player Score: {playerScore}</div>
+			<div className="text-4xl">Player Score: {playerScore}</div>
 		</div>
 	);
 };

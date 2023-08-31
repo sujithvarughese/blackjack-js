@@ -3,8 +3,8 @@ import { useGlobalContext } from "../context/GlobalContext.jsx";
 const PlayerOptions = () => {
 
 	const {
-		newDealOption,
-		insuranceOption,
+		//newDealOption,
+		//insuranceOption,
 		splitOption,
 		doubleOption,
 		hitOption,
@@ -12,7 +12,7 @@ const PlayerOptions = () => {
 		hit,
 		stay,
 		double,
-		split
+		split,
 	} = useGlobalContext()
 
 	return (
@@ -27,19 +27,20 @@ const PlayerOptions = () => {
 			}
 			{stayOption &&
 				<button onClick={stay} className="btn">stay!</button>
-			}
+			}{/*
 			{newDealOption &&
 				<button onClick={newDeal} className="btn">Play Again!</button>
 			}
 			{insuranceOption &&
 				<button onClick={insurance} className="btn">Take Insurance!</button>
-			}
+			}*/}
 			{splitOption &&
 				<button onClick={split} className="btn">split!</button>
 			}
 			{doubleOption &&
 				<button onClick={double} className="btn">double!</button>
 			}
+
 
 
 		</div>

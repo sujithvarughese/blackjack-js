@@ -7,6 +7,7 @@ import {
 	ADD_FUNDS,
 	PLACE_BETS,
 	SET_INITIAL_DEAL,
+	SHOW_ASSIST,
 
 	HANDLE_BOTH_BLACKJACK,
 	HANDLE_PLAYER_BLACKJACK,
@@ -111,7 +112,15 @@ const Reducer = (state, action) => {
 			dealerFaceUp: action.payload.dealerFaceUp,
 			doubleOption: true,
 			hitOption: true,
+			assistOption: true,
 			playerOptions: true
+		}
+	}
+
+	if (action.type === SHOW_ASSIST) {
+		return {
+			...state,
+			showAssist: true,
 		}
 	}
 

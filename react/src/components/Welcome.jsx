@@ -10,7 +10,7 @@ const Welcome = () => {
 	return (
 		<div className="flex flex-col m-12 gap-4">
 			<div className=" text-center text-5xl">Welcome to Blackjack!</div>
-			<img src={tableIMG} alt='welcome table'/>
+			<img src={tableIMG} alt='welcome table' className=""/>
 
 			<button className="btn" onClick={hideWelcome}>Play</button>
 
