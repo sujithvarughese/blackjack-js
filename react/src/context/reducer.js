@@ -112,7 +112,6 @@ const Reducer = (state, action) => {
 			dealerFaceUp: action.payload.dealerFaceUp,
 			doubleOption: true,
 			hitOption: true,
-			assistOption: true,
 			playerOptions: true
 		}
 	}
@@ -120,7 +119,7 @@ const Reducer = (state, action) => {
 	if (action.type === SHOW_ASSIST) {
 		return {
 			...state,
-			showAssist: true,
+			showAssist: action.payload.bool,
 		}
 	}
 
@@ -184,7 +183,8 @@ const Reducer = (state, action) => {
 			doubleOption: false,
 			hitOption: false,
 			canPlaceBets: true,
-			dealerCardShown: true
+			dealerCardShown: true,
+			showAssist: false,
 		}
 	}
 
@@ -207,7 +207,8 @@ const Reducer = (state, action) => {
 			splitOption: false,
 			doubleOption: false,
 			hitOption: false,
-			dealerCardShown: true
+			dealerCardShown: true,
+			showAssist: false,
 		}
 	}
 
@@ -224,7 +225,8 @@ const Reducer = (state, action) => {
 			doubleOption: false,
 			hitOption: false,
 			doubledHand: true,
-			dealerCardShown: true
+			dealerCardShown: true,
+			showAssist: false,
 		}
 	}
 

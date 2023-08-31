@@ -12,6 +12,9 @@ import PlayerOptions from "./PlayerOptions.jsx";
 import PlayerScore from "./PlayerScore.jsx";
 import Simulation from "./Simulation.jsx";
 import Welcome from "./Welcome.jsx"
+import CurrentBet from "./CurrentBet.jsx";
+import Bankroll from "./Bankroll.jsx";
+import BtnAssist from "./BtnAssist.jsx";
 
-export { Assist, Game, Player, GameInfo, Menu, Simulation, Alert, PlayerScore, AddFunds, PlayerOptions, PlaceBets, DealerScore, Welcome, Dealer,
+export { Assist, Game, Player, GameInfo, Menu, Simulation, Alert, PlayerScore, AddFunds, PlayerOptions, PlaceBets, DealerScore, Welcome, Dealer, CurrentBet, Bankroll, BtnAssist
 }

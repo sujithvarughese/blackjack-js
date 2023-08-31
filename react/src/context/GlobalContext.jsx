@@ -331,9 +331,10 @@ const GlobalProvider = ({ children }) => {
 			dealerMove()
 		}, 1000)
 	}
-	const showAssist = () => {
+	const setShowAssist = (bool) => {
 		dispatch({
-			type: SHOW_ASSIST
+			type: SHOW_ASSIST,
+			payload: { bool }
 		})
 	}
 
@@ -414,7 +415,7 @@ const GlobalProvider = ({ children }) => {
 				hideWelcome,
 				setupGame,
 				setShowMenu,
-				showAssist,
+				setShowAssist,
 				addFunds,
 				placeBet,
 				handleBlackjack,

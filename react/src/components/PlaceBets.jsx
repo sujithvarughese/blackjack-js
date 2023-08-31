@@ -42,7 +42,7 @@ const PlaceBets = () => {
 
 					<AddFunds setShowAddFunds={setShowAddFunds} />
 					:
-					<form className="form w-88 h-56 m-36 border-4 border-red-700 flex flex-col justify-center"
+					<form className="form border-4 border-red-700 flex flex-col justify-center"
 					      onSubmit={handleSubmit}>
 
 						<label

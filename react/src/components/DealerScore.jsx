@@ -1,11 +1,14 @@
 import { useGlobalContext } from "../context/GlobalContext.jsx";
 
 const DealerScore = () => {
-	const { playerScore } = useGlobalContext()
+	const { dealerScore, dealerCardShown } = useGlobalContext()
 
 	return (
 		<div className="">
-			<div className="text-4xl">Player Score: {playerScore}</div>
+			{
+				dealerCardShown &&
+				<div className="">Dealer Score: {dealerScore}</div>
+			}
 		</div>
 	);
 };

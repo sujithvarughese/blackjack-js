@@ -37,18 +37,19 @@
     right: 0;
     justify-content: center;
     align-items: center;
-    z-index: 10;
-    bottom: 20%;
+    z-index: 20;
+    bottom: 35%;
     display: flex;
 
 }
-
+.help {
+    z-index: 10
+}
 .hand {
     display: flex;
     left: 0;
     right: 0;
     justify-content: center;
-    z-index: 10;
 }
 .card-img {
     width: 18%;
@@ -66,7 +67,6 @@
     bottom: 28%;
 }
 
-
 .bets {
     top: 14%;
 }
@@ -81,8 +81,6 @@
 }
 .info {
     position: absolute;
-    top: 40%;
-    left: 23%;
     color: white;
     text-transform: capitalize;
     letter-spacing: 1px;
@@ -92,15 +90,15 @@
 .player-score {
     color: white;
     position: absolute;
-    top: 55%
+    top: 55%;
+    left: 18%;
 }
 
 .dealer-score {
     color: white;
     position: absolute;
     top: 20%;
-    left: 0;
-    right: 0;
+    left: 18%;
 
 }
 
@@ -117,7 +115,6 @@
     transition: 0.3s ease-in-out all;
     text-transform: capitalize;
     display: inline-block;
-    z-index: 10;
     margin-top: 15px;
 }
 
@@ -245,7 +242,7 @@
     .options {
         position: absolute;
         bottom: 48%;
-        z-index: 20;
+        z-index: 10;
     }
     .btn {
         font-size: 24px;
@@ -277,7 +274,7 @@
 
     .bets {
         top: 17%;
-        z-index: 20;
+        z-index: 10;
     }
     .menu {
         position: absolute;

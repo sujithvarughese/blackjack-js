@@ -1,16 +1,11 @@
 import { useGlobalContext } from "../context/GlobalContext.jsx";
-import { useEffect } from "react";
-import { GrClose } from "react-icons/gr"
 
-const Assist = () => {
-	const { playerScore, dealerFaceUp, playerAce11, showAssist } = useGlobalContext()
+const BtnAssist = () => {
 
-	const hit = "hit"
-	const stay = "stay"
-	const double = "double"
-	let action
+	const { setShowAssist, playerScore, dealerFaceUp, playerAce11 } = useGlobalContext()
 
-	useEffect(() => {
+
+	const determineAssist = () => {
 		if (playerAce11) {
 			switch (playerScore) {
 				case 18:
@@ -196,19 +191,15 @@ const Assist = () => {
 			default:
 				action = stay
 		}
-	}, [])
+	}
 
-
-	console.log(action);
 	return (
+		<div>
 
-			<div className="modal text-white w-1/3 ">
-				<GrClose className="float-right hover:cursor-pointer" onClick={()=>showAssist(false)}/>
-				You should {action}!
-			</div>
+				<button onClick={() => {determineAssist; setShowAssist(true)}} className="btn">Help!</button>
 
-
+		</div>
 	);
 };
 
-export default Assist;
+export default BtnAssist;
