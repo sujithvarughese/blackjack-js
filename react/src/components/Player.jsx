@@ -8,7 +8,7 @@ const Player = () => {
       <>
          {
             playerHand.map((card, index) =>
-               (index === 2 && doubledHand)
+               (doubledHand && index === 2)
                   ?
                   <img key={card.img} className="card-img doubled" src={card.img} alt={card.value} />
                   :

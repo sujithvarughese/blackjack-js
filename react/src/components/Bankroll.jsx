@@ -6,7 +6,7 @@ const Bankroll = () => {
 
 	return (
 		<div>
-			<div className="">Bankroll: {playerBankroll}</div>
+			<div className="">Bankroll: ${playerBankroll}</div>
 		</div>
 	);
 };

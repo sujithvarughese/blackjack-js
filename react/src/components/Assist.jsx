@@ -1,14 +1,14 @@
 import { useGlobalContext } from "../context/GlobalContext.jsx";
-import { useEffect } from "react";
-import { GrClose } from "react-icons/gr"
+import { useEffect, useState } from "react";
 
 const Assist = () => {
-	const { playerScore, dealerFaceUp, playerAce11, showAssist } = useGlobalContext()
+	const { playerScore, dealerFaceUp, playerAce11 } = useGlobalContext()
 
-	const hit = "hit"
-	const stay = "stay"
-	const double = "double"
-	let action
+	const hit = "Hit"
+	const stay = "Stay"
+	const double = "Double"
+	const [hint, setHint] = useState("")
+
 
 	useEffect(() => {
 		if (playerAce11) {
@@ -19,12 +19,12 @@ const Assist = () => {
 						case 4:
 						case 5:
 						case 6:
-							action = double
+							setHint(double)
 							break
 						case 9:
 						case 10:
 						case 11:
-							action = hit
+							setHint(hit)
 							break
 					}
 				case 17:
@@ -33,7 +33,7 @@ const Assist = () => {
 						case 4:
 						case 5:
 						case 6:
-							action = double
+							setHint(double)
 							break
 						case 2:
 						case 7:
@@ -41,7 +41,7 @@ const Assist = () => {
 						case 9:
 						case 10:
 						case 11:
-							action = hit
+							setHint(hit)
 							break
 					}
 				case 16:
@@ -50,7 +50,7 @@ const Assist = () => {
 						case 4:
 						case 5:
 						case 6:
-							action = double
+							setHint(double)
 							break
 						case 2:
 						case 3:
@@ -59,7 +59,7 @@ const Assist = () => {
 						case 9:
 						case 10:
 						case 11:
-							action = hit
+							setHint(hit)
 							break
 					}
 				case 14:
@@ -67,7 +67,7 @@ const Assist = () => {
 					switch (dealerFaceUp) {
 						case 5:
 						case 6:
-							action = double
+							setHint(double)
 							break
 						case 2:
 						case 3:
@@ -77,134 +77,132 @@ const Assist = () => {
 						case 9:
 						case 10:
 						case 11:
-							action = hit
+							setHint(hit)
 							break
 					}
-					break
 				default:
-					action = stay
+					setHint(stay)
 			}
-		}
-
-		switch (playerScore) {
-			case 20:
-				action = hit
-				break
-			case 19:
-				action = hit
-			case 18:
-				action = hit
-				break
-			case 16:
-			case 15:
-			case 14:
-			case 13:
-				switch (dealerFaceUp) {
-					case 7:
-					case 8:
-					case 9:
-					case 10:
-					case 11:
-						action = hit
-						break
-				}
-			case 12:
-				switch (dealerFaceUp) {
-					case 2:
-					case 3:
-					case 7:
-					case 8:
-					case 9:
-					case 10:
-					case 11:
-						action = hit
-						break
-				}
-			case 11:
-				action = double
-				break
-			case 10:
-				switch (dealerFaceUp) {
-					case 2:
-					case 3:
-					case 4:
-					case 5:
-					case 6:
-					case 7:
-					case 8:
-					case 9:
-						action = double
-						break
-					case 10:
-					case 11:
-						action = hit
-						break
-				}
-			case 9:
-				switch (dealerFaceUp) {
-					case 3:
-					case 4:
-					case 5:
-					case 6:
-						action = double
-						break
-					case 2:
-					case 7:
-					case 8:
-					case 9:
-					case 10:
-					case 11:
-						action = hit
-						break
-				}
-			case 8:
-				switch (dealerFaceUp) {
-					case 2:
-					case 3:
-					case 4:
-					case 5:
-					case 6:
-					case 7:
-					case 8:
-					case 9:
-					case 10:
-					case 11:
-						action = hit
-						break
-				}
-			case 7:
-			case 6:
-			case 5:
-			case 4:
-			case 3:
-			case 2:
-				switch (dealerFaceUp) {
-					case 2:
-					case 3:
-					case 4:
-					case 5:
-					case 6:
-					case 7:
-					case 8:
-					case 9:
-					case 10:
-					case 11:
-						action = hit
-						break
-				}
-				break
-			default:
-				action = stay
+		} else {
+			switch (playerScore) {
+				case 20:
+					setHint(stay)
+					break
+				case 19:
+					setHint(stay)
+					break
+				case 18:
+					setHint(stay)
+					break
+				case 16:
+				case 15:
+				case 14:
+				case 13:
+					switch (dealerFaceUp) {
+						case 7:
+						case 8:
+						case 9:
+						case 10:
+						case 11:
+							setHint(hit)
+							break
+					}
+				case 12:
+					switch (dealerFaceUp) {
+						case 2:
+						case 3:
+						case 7:
+						case 8:
+						case 9:
+						case 10:
+						case 11:
+							setHint(hit)
+							break
+					}
+				case 11:
+					setHint(double)
+					break
+				case 10:
+					switch (dealerFaceUp) {
+						case 2:
+						case 3:
+						case 4:
+						case 5:
+						case 6:
+						case 7:
+						case 8:
+						case 9:
+							setHint(double)
+							break
+						case 10:
+						case 11:
+							setHint(hit)
+							break
+					}
+				case 9:
+					switch (dealerFaceUp) {
+						case 3:
+						case 4:
+						case 5:
+						case 6:
+							setHint(double)
+							break
+						case 2:
+						case 7:
+						case 8:
+						case 9:
+						case 10:
+						case 11:
+							setHint(hit)
+							break
+					}
+				case 8:
+					switch (dealerFaceUp) {
+						case 2:
+						case 3:
+						case 4:
+						case 5:
+						case 6:
+						case 7:
+						case 8:
+						case 9:
+						case 10:
+						case 11:
+							setHint(hit)
+							break
+					}
+				case 7:
+				case 6:
+				case 5:
+				case 4:
+				case 3:
+				case 2:
+					switch (dealerFaceUp) {
+						case 2:
+						case 3:
+						case 4:
+						case 5:
+						case 6:
+						case 7:
+						case 8:
+						case 9:
+						case 10:
+						case 11:
+							setHint(hit)
+							break
+					}
+				default:
+					setHint(stay)
+			}
 		}
 	}, [])
 
 
-	console.log(action);
+	console.log(hint);
 	return (
 
-			<div className="modal text-white w-1/3 ">
-				<GrClose className="float-right hover:cursor-pointer" onClick={()=>showAssist(false)}/>
-				You should {action}!
+			<div className="text-white text-2xl font-bold">
+				{hint}!
 			</div>
 
 

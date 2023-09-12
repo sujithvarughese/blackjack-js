@@ -6,7 +6,7 @@ const CurrentBet = () => {
 
 	return (
 		<div>
-			<div className="">Current Bet: {bet}</div>
+			<div className="">Bet: ${bet}</div>
 		</div>
 	);
 };

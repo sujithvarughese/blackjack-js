@@ -209,6 +209,10 @@ const Simulation = () => {
 			action = stay
 	}
 
+	const splitHands = () => {
+
+	}
+
 	return (
 		<div>
 
