@@ -6,6 +6,8 @@ export const SETUP_GAME = 'SETUP_GAME'
 export const SET_SHOW_MENU = 'SET_SHOW_MENU'
 export const ADD_FUNDS = 'ADD_FUNDS'
 export const PLACE_BETS = 'PLACE_BETS'
+
+export const DEAL_CARD = 'DEAL_CARD'
 export const SET_INITIAL_DEAL = 'SET_INITIAL_DEAL'
 
 export const HANDLE_BOTH_BLACKJACK = 'HANDLE_BOTH_BLACKJACK'

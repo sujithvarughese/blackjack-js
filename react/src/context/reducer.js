@@ -6,6 +6,7 @@ import {
 	SET_SHOW_MENU,
 	ADD_FUNDS,
 	PLACE_BETS,
+	DEAL_CARD,
 	SET_INITIAL_DEAL,
 	SHOW_ASSIST,
 
@@ -93,6 +94,13 @@ const Reducer = (state, action) => {
 			playerAce11: false,
 			dealerAce11: false,
 			handInProgress: true
+		}
+	}
+
+	if (action.type === DEAL_CARD) {
+		return {
+			...state,
+			shoe: action.payload.shoe
 		}
 	}
 

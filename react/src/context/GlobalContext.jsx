@@ -10,6 +10,7 @@ import {
 	SET_SHOW_MENU,
 	ADD_FUNDS,
 	PLACE_BETS,
+	DEAL_CARD,
 	SET_INITIAL_DEAL,
 	SHOW_ASSIST,
 	HANDLE_BOTH_BLACKJACK,
@@ -31,6 +32,15 @@ import simulation from "../components/Simulation.jsx";
 const initialState = {
 	alert: '',
 	showAlert: false,
+
+	rules : {
+		dealerHitSoft17: true,
+		insuranceAllowed: false,
+		evenMoneyAllowed: false,
+		surrenderAllowed: false,
+		blackjackPayout: 3/2,
+		maxNumSplits: 3,
+	},
 
 	shoe: {},
 	playerBankroll: 500,
@@ -129,6 +139,16 @@ const GlobalProvider = ({ children }) => {
 			payload: { bet }
 		})
 		setInitialDeal()
+	}
+
+	const dealCard = () => {
+		const shoe = state.shoe
+		const nextCard = shoe.pop()
+		dispatch({
+			type: DEAL_CARD,
+			payload: { shoe }
+		})
+		return nextCard
 	}
 
 	const setInitialDeal = (simShoe) => {
