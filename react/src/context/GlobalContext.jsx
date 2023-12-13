@@ -11,6 +11,7 @@ import {
 	ADD_FUNDS,
 	PLACE_BETS,
 	DEAL_CARD,
+	SPLIT_HAND,
 	SET_INITIAL_DEAL,
 	SHOW_ASSIST,
 	HANDLE_BOTH_BLACKJACK,
@@ -47,9 +48,11 @@ const initialState = {
 	bet: 25,
 
 	playerHand: [],
+	playerHandSplit: [],
 	playerScore: 0,
 	playerBlackjack: false,
 	playerAce11: false,
+	playerSplitAce11: false,
 
 	dealerHand: [],
 	dealerScore: 0,
@@ -253,6 +256,26 @@ const GlobalProvider = ({ children }) => {
 		}
 	}
 
+	const split = () => {
+		console.log("split")
+		displayAlert('Split!')
+		let playerAce11 = false;
+		const nextCard = dealCard()
+		if (nextCard.value === 11 && state.playerHand[0].value <= 10) {
+			playerAce11 = true
+			nextCard.value = 11
+		}
+		dispatch({
+			type: SPLIT_HAND,
+			payload: {
+				splitHand: true,
+				playerHand: [state.playerHand[0], nextCard],
+				playerHandSplit: [state.playerHand[1]],
+				playerAce11: playerAce11
+			}
+		})
+
+	}
 
 	const hit = () => {
 		// get info from state and create local variables
@@ -442,6 +465,7 @@ const GlobalProvider = ({ children }) => {
 				hit,
 				stay,
 				double,
+				split
 
 
 			}

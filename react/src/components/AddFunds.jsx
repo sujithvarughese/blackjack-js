@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useGlobalContext } from "../context/GlobalContext.jsx";
+import Button from "../ui/Button.jsx";
 
 const AddFunds = ({ setShowAddFunds }) => {
 
@@ -31,8 +32,8 @@ const AddFunds = ({ setShowAddFunds }) => {
 				onChange={handleChange}
 			/>
 			<div className="flex gap-4">
-				<button className="btn" type="submit">Reload!</button>
-				<button className="btn" onClick={()=>setShowAddFunds(false)}>Cancel</button>
+				<Button className="btn" type="submit">Reload!</Button>
+				<Button className="btn" onClick={()=>setShowAddFunds(false)}>Cancel</Button>
 			</div>
 
 		</form>

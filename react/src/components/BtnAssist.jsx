@@ -1,4 +1,5 @@
 import { useGlobalContext } from "../context/GlobalContext.jsx";
+import Button from "../ui/Button.jsx";
 
 const BtnAssist = () => {
 
@@ -12,7 +13,7 @@ const BtnAssist = () => {
 	return (
 		<div>
 
-				<button onClick={determineAssist} className="btn absolute left-4">Help!</button>
+				<Button onClick={determineAssist} className="btn absolute left-4">Help!</Button>
 
 		</div>
 	);

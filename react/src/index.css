@@ -3,25 +3,18 @@
 @tailwind utilities;
 
 body {
-    height: fit-content;
-}
-
-.game {
-    background: url("images/green-bg.jpeg");
-    background-size: cover;
+    margin: 0 auto;
 }
 
 .game-container {
-    background-image: url("images/table-main-mobile.jpeg");
-    background-size: contain;
+    background-image: url("images/table-main.jpeg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    max-width: 1200px;
     position: relative;
     margin: 0 auto; /* this does the centering */
-    background-repeat: no-repeat;
-    width: 100vw;
-    min-height: 100vh;
-    height: auto;
-    border: 2px red solid;
-    overflow: hidden;
+    height: 100vh;
 }
 
 .options  {
@@ -73,7 +66,6 @@ body {
     top: 1%;
     right: 2%;
 }
-
 .bet {
     position: absolute;
     display: flex;
@@ -92,6 +84,7 @@ body {
 
 .bets {
     top: 14%;
+    z-index: 10;
 }
 
 .menu {
@@ -101,7 +94,7 @@ body {
     left: 0;
     right: 0;
     justify-content: center;
-    z-index: 10;
+    z-index: 50;
 }
 
 .info {
@@ -244,84 +237,38 @@ body {
 
 /* small */
 @media screen and (min-width: 768px){
-    body {
-        margin: 0 auto;
-    }
-    .game {
-        background: none;
-    }
-    .game-container {
-        background-image: url("images/table-main.jpeg");
-        background-size: contain;
-        position: relative;
-        margin: 0 auto; /* this does the centering */
-        background-repeat: no-repeat;
-        width: 768px;
-        min-height: 459px;
-        border: 2px red solid;
-        overflow: hidden;
-    }
+
+
     .options {
-        position: absolute;
         bottom: 48%;
-        z-index: 10;
     }
     .btn {
         font-size: 24px;
         margin-top: 30px;
-    }
-
-    .hand {
-        display: flex;
-        left: 0;
-        right: 0;
-        justify-content: center;
-        z-index: 10;
     }
     .card-img {
         width: 12%;
         height: auto;
     }
     .dealer {
-        position: absolute;
         top: 3%;
     }
     .player {
-        position: absolute;
         bottom: 6%;
     }
 
     .bets {
         top: 17%;
-        z-index: 10;
     }
     .menu {
-        position: absolute;
         top: 2%;
-        display: flex;
-        left: 0;
-        right: 0;
-        justify-content: center;
-        z-index: 20;
-    }
-    .info {
-        position: absolute;
-        text-transform: capitalize;
-        letter-spacing: 1px;
-        font-size: 2rem;
     }
     .player-score {
         top: 56%;
     }
-
     .dealer-score {
         top: 32%;
     }
-    .bankroll {
-        top: 1%;
-        right: 2%;
-    }
-
     .bet {
         top: 9%;
         right: 4.5%;
@@ -334,28 +281,3 @@ body {
 
 
 
-/* large */
-@media screen and (min-width: 1024px){
-    body {
-        margin: 0 auto;
-    }
-
-    .game-container {
-        min-height: 612px;
-        width: 1024px;
-    }
-
-
-}
-
-/* mobile- landscape */
-@media screen and (max-height: 425px) and (min-aspect-ratio: 7/4){
-    body {
-
-        position: relative;
-        margin: 0 auto; /* this does the centering */
-
-
-
-    }
-}

@@ -1,4 +1,5 @@
 import { useGlobalContext } from "../context/GlobalContext.jsx";
+import Button from "../ui/Button.jsx";
 
 const PlayerOptions = () => {
 
@@ -20,8 +21,8 @@ const PlayerOptions = () => {
 
 			{hitOption &&
 				<>
-					<button onClick={hit} className="btn">hit!</button>
-					<button onClick={stay} className="btn">stay!</button>
+					<Button onClick={hit} className="btn">hit!</Button>
+					<Button onClick={stay} className="btn">stay!</Button>
 				</>
 
 			}
@@ -33,12 +34,12 @@ const PlayerOptions = () => {
 			}
 			{insuranceOption &&
 				<button onClick={insurance} className="btn">Take Insurance!</button>
-			}*/}
-			{splitOption &&
-				<button onClick={split} className="btn">split!</button>
 			}
+			{splitOption &&
+				<Button onClick={split} className="btn">split!</Button>
+			}*/}
 			{doubleOption &&
-				<button onClick={double} className="btn">double!</button>
+				<Button onClick={double} className="btn">double!</Button>
 			}
 
 

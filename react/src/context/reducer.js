@@ -7,6 +7,7 @@ import {
 	ADD_FUNDS,
 	PLACE_BETS,
 	DEAL_CARD,
+	SPLIT_HAND,
 	SET_INITIAL_DEAL,
 	SHOW_ASSIST,
 
@@ -104,6 +105,17 @@ const Reducer = (state, action) => {
 		}
 	}
 
+	if (action.type ===  SPLIT_HAND) {
+		return {
+			...state,
+			splitHand: action.payload.splitHand,
+			playerHand: action.payload.playerHand,
+			playerHandSplit: action.payload.playerHandSplit,
+			playerAce11: action.payload.playerAce11,
+			splitOption: false,
+		}
+	}
+
 	// -hands and scores are set in state
 	// -shoe after deal set in state
 	// -cards should be rendered and user should be prompted an action based on hand value
@@ -119,10 +131,12 @@ const Reducer = (state, action) => {
 			dealerAce11: action.payload.dealerAce11,
 			dealerFaceUp: action.payload.dealerFaceUp,
 			doubleOption: true,
+			splitOption: action.payload.splitOption,
 			hitOption: true,
 			playerOptions: true
 		}
 	}
+
 
 	if (action.type === SHOW_ASSIST) {
 		return {
@@ -205,6 +219,7 @@ const Reducer = (state, action) => {
 			playerAce11: action.payload.playerAce11,
 			splitOption: false,
 			doubleOption: false,
+			showAssist: false,
 		}
 	}
 

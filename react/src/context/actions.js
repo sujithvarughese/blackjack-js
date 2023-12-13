@@ -8,6 +8,7 @@ export const ADD_FUNDS = 'ADD_FUNDS'
 export const PLACE_BETS = 'PLACE_BETS'
 
 export const DEAL_CARD = 'DEAL_CARD'
+export const SPLIT_HAND = 'SPLIT_HAND'
 export const SET_INITIAL_DEAL = 'SET_INITIAL_DEAL'
 
 export const HANDLE_BOTH_BLACKJACK = 'HANDLE_BOTH_BLACKJACK'

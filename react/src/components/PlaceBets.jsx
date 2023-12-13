@@ -2,6 +2,7 @@ import { useGlobalContext } from "../context/GlobalContext.jsx";
 import { useEffect, useState } from "react";
 import AddFunds from "./AddFunds.jsx";
 import Menu from "./Menu.jsx";
+import Button from "../ui/Button.jsx";
 
 const PlaceBets = () => {
 
@@ -60,8 +61,8 @@ const PlaceBets = () => {
 							onChange={handleChange} />
 
 						<div className="flex gap-4">
-							<button className="btn" type="submit">Deal!</button>
-							<button className="btn" type="button" onClick={()=>setShowAddFunds(true)}>Add Funds</button>
+							<Button className="btn" type="submit">Deal!</Button>
+							<Button className="btn" type="button" onClick={()=>setShowAddFunds(true)}>Add Funds</Button>
 						</div>
 
 

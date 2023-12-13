@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useGlobalContext } from "../context/GlobalContext.jsx";
 import { createShoe } from "../deck.js";
+import Button from "../ui/Button.jsx";
 
 //if user doesnt change values, default to initialState
 const initialState = {
@@ -56,7 +57,7 @@ const Menu = () => {
 				</div>
 
 
-				<button className="btn" type="submit">Start!</button>
+				<Button className="btn" type="submit">Start!</Button>
 
 			</form>
 

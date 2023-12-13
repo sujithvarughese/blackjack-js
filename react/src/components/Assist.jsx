@@ -95,7 +95,7 @@ const Assist = () => {
 
 	return (
 
-			<div className="text-white text-2xl font-bold">
+			<div className="text-white text-4xl font-bold">
 				{hint}!
 			</div>
 
