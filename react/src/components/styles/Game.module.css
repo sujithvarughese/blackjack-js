@@ -1,0 +1,16 @@
+.container {
+    background-image: url("../../images/table-main.jpeg");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    max-width: 1200px;
+    position: relative;
+    margin: 0 auto; /* this does the centering */
+    height: 100vh;
+}
+
+@media (min-width: 640px) {
+    .container {
+
+    }
+}

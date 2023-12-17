@@ -6,16 +6,6 @@ body {
     margin: 0 auto;
 }
 
-.game-container {
-    background-image: url("images/table-main.jpeg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    max-width: 1200px;
-    position: relative;
-    margin: 0 auto; /* this does the centering */
-    height: 100vh;
-}
 
 .options  {
     position: absolute;
@@ -129,7 +119,7 @@ body {
     color: white;
     font-size: 20px;
     background: darkred;
-    border: lightcoral;
+
     border-radius: 0.25rem;
     letter-spacing: 1px;
     padding: 0.375rem 0.75rem;
@@ -236,7 +226,8 @@ body {
 
 
 /* small */
-@media screen and (min-width: 768px){
+@media  (min-width: 768px){
+
 
 
     .options {

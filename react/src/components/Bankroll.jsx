@@ -6,9 +6,15 @@ const Bankroll = () => {
 
 	return (
 		<div>
-			<div className="">Bankroll: ${playerBankroll}</div>
+			<div style={styles}>${playerBankroll}</div>
 		</div>
 	);
 };
 
+const styles = {
+	"backgroundColor": "gold",
+	"color": "black",
+	"borderRadius": "5px",
+	"fontWeight": "700"
+}
 export default Bankroll;

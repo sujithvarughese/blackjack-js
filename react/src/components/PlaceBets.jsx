@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import AddFunds from "./AddFunds.jsx";
 import Menu from "./Menu.jsx";
 import Button from "../ui/Button.jsx";
+import { motion } from "framer-motion"
+import classes from "./styles/PlaceBets.module.css";
 
 const PlaceBets = () => {
 
@@ -37,17 +39,20 @@ const PlaceBets = () => {
 	}, [])
 
 	return (
-		<div>
+		<motion.div
+			initial={{ y: -30, opacity: 0 }}
+			animate={{ y: 0, opacity: 1 }}
+			exit={{y: -30, opacity: 0 }}
+			className={classes.container}
+		>
 			{
 				showAddFunds ?
 
 					<AddFunds setShowAddFunds={setShowAddFunds} />
 					:
-					<form className="form border-4 border-red-700 flex flex-col justify-center"
-					      onSubmit={handleSubmit}>
-
+					<form className="form border-4 border-red-700 flex flex-col justify-center w-full m-2 max-w-sm" onSubmit={handleSubmit}>
 						<label
-							className='form-label p-4 text-2xl'
+							className='form-label text-2xl mx-auto p-4'
 							htmlFor="betAmount"
 						>Place Bet!
 						</label>
@@ -60,15 +65,15 @@ const PlaceBets = () => {
 							value={userBet}
 							onChange={handleChange} />
 
-						<div className="flex gap-4">
+						<div className="flex justify-around">
 							<Button className="btn" type="submit">Deal!</Button>
-							<Button className="btn" type="button" onClick={()=>setShowAddFunds(true)}>Add Funds</Button>
+							<Button className="btn" type="button" onClick={()=>setShowAddFunds(true)}>Reload</Button>
 						</div>
 
 
 					</form>
 			}
-		</div>
+		</motion.div>
 	);
 };
 

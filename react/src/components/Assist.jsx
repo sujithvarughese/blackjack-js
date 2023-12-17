@@ -1,5 +1,6 @@
 import { useGlobalContext } from "../context/GlobalContext.jsx";
 import { useEffect, useState } from "react";
+import {motion} from "framer-motion"
 
 const Assist = () => {
 	const { playerHand, playerScore, dealerFaceUp, playerAce11 } = useGlobalContext()
@@ -95,9 +96,15 @@ const Assist = () => {
 
 	return (
 
-			<div className="text-white text-4xl font-bold">
-				{hint}!
-			</div>
+				<motion.div className="text-white text-4xl font-bold"
+							initial={{ y: -30, opacity: 0 }}
+							animate={{ y: 0, opacity: 1 }}
+							exit={{y: -30, opacity: 0 }}
+				>
+					{hint}!
+				</motion.div>
+
+
 
 
 	);

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useGlobalContext } from "../context/GlobalContext.jsx";
 import { createShoe } from "../deck.js";
 import Button from "../ui/Button.jsx";
+import { motion } from "framer-motion"
 
 //if user doesnt change values, default to initialState
 const initialState = {
@@ -30,7 +31,11 @@ const Menu = () => {
 
 	return (
 
-			<form className="form mx-auto" onSubmit={handleSubmit}>
+			<motion.form
+				initial={{ y: -20, opacity: 0 }}
+				animate={{ y: 0, opacity: 1 }}
+				transition={{ duration: 0.1 }}
+				className="form mx-auto" onSubmit={handleSubmit}>
 
 				<p className="form-title">Main Menu</p>
 
@@ -59,7 +64,7 @@ const Menu = () => {
 
 				<Button className="btn" type="submit">Start!</Button>
 
-			</form>
+			</motion.form>
 
 
 	);

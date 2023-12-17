@@ -1,0 +1,43 @@
+.playerHand {
+    position: absolute;
+    bottom: 7rem;
+    display: flex;
+    flex-wrap: wrap;
+    left: 0;
+    right: 0;
+    justify-content: center;
+}
+
+.dealerHand {
+    position: absolute;
+    top: 5rem;
+    display: flex;
+    flex-wrap: wrap;
+    left: 0;
+    right: 0;
+    justify-content: center;
+
+}
+.card {
+    width: 6rem;
+    height: auto;
+}
+
+.doubled {
+    width: 6rem;
+    height: auto;
+    transform: rotate(90deg)
+}
+
+@media (min-width: 640px) {
+    .dealer {
+        top: 3%;
+    }
+    .player {
+        bottom: 6%;
+    }
+    .card {
+        width: 12%;
+        height: auto;
+    }
+}

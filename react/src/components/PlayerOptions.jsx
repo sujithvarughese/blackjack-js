@@ -1,5 +1,6 @@
 import { useGlobalContext } from "../context/GlobalContext.jsx";
 import Button from "../ui/Button.jsx";
+import { motion } from "framer-motion";
 
 const PlayerOptions = () => {
 
@@ -17,7 +18,11 @@ const PlayerOptions = () => {
 	} = useGlobalContext()
 
 	return (
-		<div className="flex gap-3">
+		<motion.div className="flex gap-3"
+					initial={{ y: -10, opacity: 0 }}
+					animate={{ y: 0, opacity: 1 }}
+					exit={{y: -10, opacity: 0 }}
+		>
 
 			{hitOption &&
 				<>
@@ -44,7 +49,7 @@ const PlayerOptions = () => {
 
 
 
-		</div>
+		</motion.div>
 	);
 };
 
