@@ -88,7 +88,7 @@ const Reducer = (state, action) => {
 			showAlert: false,
 			alertText: "",
 			bet: action.payload.bet,
-			playerBankroll: state.playerBankroll - action.payload.bet,
+			playerBankroll: Number(state.playerBankroll) - Number(action.payload.bet),
 			doubledHand: false,
 			canPlaceBets: false,
 			dealerCardShown: false,
@@ -158,7 +158,7 @@ const Reducer = (state, action) => {
 			canPlaceBets: true,
 			playerOptions: false,
 			// return bet to player
-			playerBankroll: state.playerBankroll + state.bet
+			playerBankroll: Number(state.playerBankroll) + Number(state.bet)
 		}
 	}
 	if (action.type === HANDLE_PLAYER_BLACKJACK) {
@@ -173,7 +173,7 @@ const Reducer = (state, action) => {
 			canPlaceBets: true,
 			playerOptions: false,
 			// blackjack pays 3:2
-			playerBankroll: state.playerBankroll + state.bet + (state.bet * 1.5)
+			playerBankroll: Number(state.playerBankroll) + Number(state.bet) + Number(state.bet * 1.5)
 		}
 	}
 
@@ -259,7 +259,7 @@ const Reducer = (state, action) => {
 			shoe: action.payload.shoe,
 			dealerHand: action.payload.dealerHand,
 			dealerScore: action.payload.dealerScore,
-			playerBankroll: state.playerBankroll + state.bet + state.bet,
+			playerBankroll: Number(state.playerBankroll) + Number(state.bet) + Number(state.bet),
 			canPlaceBets: true,
 		}
 	}
@@ -277,7 +277,7 @@ const Reducer = (state, action) => {
 	if (action.type === PLAYER_WIN) {
 		return {
 			...state,
-			playerBankroll: state.playerBankroll + state.bet + state.bet,
+			playerBankroll: Number(state.playerBankroll) + Number(state.bet) + Number(state.bet),
 			canPlaceBets: true,
 		}
 	}
@@ -290,7 +290,7 @@ const Reducer = (state, action) => {
 	if (action.type === PUSH) {
 		return {
 			...state,
-			playerBankroll: state.playerBankroll + state.bet,
+			playerBankroll: Number(state.playerBankroll) + Number(state.bet),
 			canPlaceBets: true,
 		}
 	}
